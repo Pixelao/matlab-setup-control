@@ -4,7 +4,7 @@ classdef SetupControl < handle
     end
     methods
         function obj = SetupControl
-            obj.equipment.LI=[]; %Lock-Ins
+            obj.equipment.LI=[]; %Lock-Inss
             obj.equipment.SM=[]; %Source Meters
             obj.equipment.EM=[]; %Electrometers
             obj.equipment.ITC503=[];%TemperatureController
