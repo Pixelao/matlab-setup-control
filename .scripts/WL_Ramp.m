@@ -6,7 +6,7 @@ PCSfig=findobj('Name','PCS');
 % Create figure
 h_WL=figure();
 set(h_WL,'OuterPosition',[400 10 1000 670],'Color',0.95*[1 1 1],'ToolBar','figure'...
-    ,'NumberTitle','off','Name','I-V ramp','MenuBar','figure')
+    ,'NumberTitle','off','Name','WL ramp','MenuBar','figure')
 addprop(h_WL,'UIHandles');
 addprop(h_WL,'MeasurementData');
 % IV panel
@@ -79,13 +79,13 @@ end
 
 
 %callbacks
-function [] = FileSaveCallBack(varargin)
-h=gcf;
-[filename, pathname] = uiputfile('*.fig', 'Save the file as');
-    if isnumeric(filename)
-       disp('User pushed cancel. Not saving anything')
-    else
-       savefig(h,fullfile(pathname, filename))
+    function [] = FileSaveCallBack(varargin)
+        h=gcf;
+        [filename, pathname] = uiputfile('*.fig', 'Save the file as');
+        if isnumeric(filename)
+            disp('User pushed cancel. Not saving anything')
+        else
+            savefig(h,fullfile(pathname, filename))
+        end
     end
-end
 end

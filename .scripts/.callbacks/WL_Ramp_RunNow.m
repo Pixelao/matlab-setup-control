@@ -1,9 +1,9 @@
-function [] = IV_Ramp_RunNow (varargin)
+function [] = WL_Ramp_RunNow (varargin)
 %%
 addpath(genpath(pwd))
 % get figure UI handles
 PCSfig=findobj('Name','PCS');
-WLfig=findobj('Name','I-V ramp');
+WLfig=findobj('Name','WL ramp');
 % create sweep vector
 if WLfig.UIHandles.check_V_Custom.Value
     eval(strcat('SweepRamp =',WLfig.UIHandles.h_V_Custom.String,';'));
