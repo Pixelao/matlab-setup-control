@@ -21,7 +21,7 @@ h_WL.UIHandles.b_RunNow=uicontrol('Parent',panel_RunButtons,'Style','PushButton'
 h_WL.UIHandles.b_Pause=uicontrol('Parent',panel_RunButtons,'Style','ToggleButton','String','Pause','Position',[10 70 80 25]);
 h_WL.UIHandles.b_Abort=uicontrol('Parent',panel_RunButtons,'Style','ToggleButton','String','Abort','Position',[10 40 80 25]);
 h_WL.UIHandles.b_SaveAs=uicontrol('Parent',panel_RunButtons,'Style','PushButton','String','Save As...','Position',[10 10 80 25]...
-    ,'Callback','');
+    ,'Callback','FileSaveCallBack');
 
 % measurement ramp settings
 panel_SweepConfig=uipanel('Parent',panel_IVControls,'FontSize',10 ...
