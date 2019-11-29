@@ -25,9 +25,9 @@ f_control.SourceMeterChannels=zeros(1,length(f_control.Control.equipment.SM));
 for ind=1:f_control.NumberOfSourceMeters
     SourceMeterModel=f_control.Control.IDN('SM',ind);
     if strfind(SourceMeterModel,'Model 2611')
-          f_control.SourceMeterChannels(ind)=1;
+        f_control.SourceMeterChannels(ind)=1;
     elseif strfind(SourceMeterModel,'Model 2614B')
-            f_control.SourceMeterChannels(ind)=2;
+        f_control.SourceMeterChannels(ind)=2;
     end
 end
 % Load Experiments panel
@@ -74,7 +74,7 @@ f_control.UIHandles.txt_Readout = uicontrol('Parent',panel_UIHandles,'Style','ed
 %Temperature control panel
 panel_T=uipanel('Title','ITC 503 Control','FontSize',10,...
     'Units','pixels'...
-    ,'Position',[30 5 160 120])
+    ,'Position',[30 5 160 120]);
 %% SM Callbacks
     function [] = UIHandles_t_ReadoutCallback(varargin)
         while f_control.UIHandles.t_Readout.Value
@@ -83,8 +83,8 @@ panel_T=uipanel('Title','ITC 503 Control','FontSize',10,...
             if ~isempty('f_control.Control.equipment.SM')
                 if length(f_control.Control.equipment.SM)>=ind
                     if channel<=f_control.SourceMeterChannels(ind)
-                    r = str2double(f_control.Control.SM_ReadI(ind,channel));
-                    f_control.UIHandles.txt_Readout.String = num2str(r(:),'%10.3e');
+                        r = str2double(f_control.Control.SM_ReadI(ind,channel));
+                        f_control.UIHandles.txt_Readout.String = num2str(r(:),'%10.3e');
                     else
                         f_control.UIHandles.t_Readout.Value=0;
                         warning('not enougth channels')
