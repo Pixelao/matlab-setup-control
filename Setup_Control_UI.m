@@ -2,9 +2,9 @@ function [] = Setup_Control_UI ()
 %% Create window and buttons
 addpath(genpath(pwd))
 f_control=figure();
-set(f_control,'Name','PCS','NumberTitle','off','OuterPosition',[170,100,230,460],...
+set(f_control,'Name','PCS','NumberTitle','off','OuterPosition',[170,100,230,550],...
     'MenuBar','none','Color',0.95*[1 1 1])
-txt_Vbias=uicontrol('Parent',f_control,'Style','text','Position',[10 390 200 25],...
+txt_Vbias=uicontrol('Parent',f_control,'Style','text','Position',[10 450 200 25],...
     'String','V1 JorgeQ Nov2019');
 
 % Create setup control object and start communication
@@ -32,7 +32,7 @@ for ind=1:f_control.NumberOfSourceMeters
 end
 % Load Experiments panel
 panel_LE=uipanel('Title','Load Experiment','FontSize',10 ...
-    ,'Units','pixels','Position',[30 315 160 80]);
+    ,'Units','pixels','Position',[30 380 160 80]);
 LE.p_SelectExperiment = uicontrol('Parent',panel_LE,'Style','PopupMenu','String',ls('.scripts/*.m')...
     ,'Position',[10 30 140 25]);
 LE_LoadCallback=@(varargin) run(strcat('.scripts/',LE.p_SelectExperiment.String(LE.p_SelectExperiment.Value,:)));
@@ -42,12 +42,12 @@ LE.b_LoadExperiment =  uicontrol('Parent',panel_LE,'Style','PushButton','String'
 % Lock-In Controls panel
 panel_LIC=uipanel('Title','Lock-In Control','FontSize',10 ...
     ,'Units','pixels' ...
-    ,'Position',[30 200 160 110]);
+    ,'Position',[30 310 160 70]);
 
 % Source-Meter Controls panel
 panel_UIHandles=uipanel('Title','Source-Meter Control','FontSize',10 ...
     ,'Units','pixels' ...
-    ,'Position',[30 10 160 180]);
+    ,'Position',[30 130 160 180]);
 addprop(f_control,'UIHandles'); %UIHandles stores all uicontrols
 f_control.UIHandles.txt_Vbias=uicontrol('Parent',panel_UIHandles,'Style','text','Position',[0 5 50 25],'String','Vbias');
 f_control.UIHandles.edit_Vbias=uicontrol('Parent',panel_UIHandles,'Style','edit','String','0','Position',[50 10 40 25],'BackgroundColor','w');
@@ -71,7 +71,10 @@ f_control.UIHandles.t_Readout = uicontrol('Parent',panel_UIHandles,'Style','togg
 f_control.UIHandles.txt_Readout = uicontrol('Parent',panel_UIHandles,'Style','edit','Position',[70 100 70 25],'BackgroundColor','k'...
     ,'ForegroundColor','w','String','   ');
 
-
+%Temperature control panel
+panel_T=uipanel('Title','ITC 503 Control','FontSize',10,...
+    'Units','pixels'...
+    ,'Position',[30 5 160 120])
 %% SM Callbacks
     function [] = UIHandles_t_ReadoutCallback(varargin)
         while f_control.UIHandles.t_Readout.Value
