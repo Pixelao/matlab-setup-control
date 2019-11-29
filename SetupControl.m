@@ -10,10 +10,10 @@ classdef SetupControl < handle
             obj.equipment.ITC503=[];%TemperatureController
         end
         function InitComms(obj)
-            %instrreset;
-            %obj.equipment.LI = gpib('ni',0,8); fopen(obj.equipment.LI); %Lock-in SR830
+            instrreset;
+            obj.equipment.LI = gpib('ni',0,8); fopen(obj.equipment.LI); %Lock-in SR830
             %obj.equipment.LI(2) = gpib('ni',0,9); fopen(obj.equipment.LI(2)); %Lock-in SR830
-            %obj.equipment.SM = gpib('ni',0,26); fopen(obj.equipment.SM(1)); %Source meter
+            obj.equipment.SM = gpib('ni',0,26); fopen(obj.equipment.SM(1)); %Source meter
             %obj.equipment.ITC503 =gpib('ni',0,13); fopen(obj.equipment.ITC503);...
              %   obj.equipment.ITC503.EOSMode='read&write';...
              %   obj.equipment.ITC503EOSCharCode='CR';%TemperatureController
@@ -139,7 +139,7 @@ classdef SetupControl < handle
         function T = ITC503_ReadT(obj)
             T=extractAfter(queryITC(obj.equipment.ITC503,'R1'),1);
         end
-        function stabilizationT=ITC503_SetT(obj,SetT,Tol,Time)
+        function stabilizationT = ITC503_SetT(obj,SetT,Tol,Time)
                 queryITC(obj.equipment.ITC503,'C3');%Remote Mode
                 queryITC(obj.equipment.ITC503,['T' num2str(SetT)]); %set temperature
                 queryITC(obj.equipment.ITC503,'A1');
@@ -193,9 +193,9 @@ classdef SetupControl < handle
             %fprintf(obj.equipment.EM(ind),'SENS:FUNC ''VOLT''')% mode
             %fprintf(obj.equipment.EM(ind),'VOLT:RANG:AUTO ON')% auto range
             %fprintf(obj.equipment.EM(ind),'SYST:ZCOR ON')% offset corr on
-%             fprintf(obj.equipment.EM(ind),'SYST:ZCH ON')% internal zero on
-%             fprintf(obj.equipment.EM(ind),'SYST:ZCOR OFF')% offset corr off
-%             fprintf(obj.equipment.EM(ind),'SYST:ZCH OFF')% internal zero off
+            %fprintf(obj.equipment.EM(ind),'SYST:ZCH ON')% internal zero on
+            %fprintf(obj.equipment.EM(ind),'SYST:ZCOR OFF')% offset corr off
+            %fprintf(obj.equipment.EM(ind),'SYST:ZCH OFF')% internal zero off
         end
         function r = EM_Read(obj,ind)
             EM_Start(obj,ind,1);
