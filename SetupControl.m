@@ -14,10 +14,16 @@ classdef SetupControl < handle
             %obj.equipment.LI = gpib('ni',0,8); fopen(obj.equipment.LI); %Lock-in SR830
             %obj.equipment.LI(2) = gpib('ni',0,9); fopen(obj.equipment.LI(2)); %Lock-in SR830
             %obj.equipment.SM = gpib('ni',0,26); fopen(obj.equipment.SM(1)); %Source meter
-            %obj.equipment.ITC503 =gpib('ni',0,13); fopen(obj.equipment.ITC503);%TemperatureController
+            %obj.equipment.ITC503 =gpib('ni',0,13); fopen(obj.equipment.ITC503);...
+             %   obj.equipment.ITC503.EOSMode='read&write';...
+             %   obj.equipment.ITC503EOSCharCode='CR';%TemperatureController
             %obj.equipment.SM(2) = gpib('ni',0,28); fopen(obj.equipment.SM(2)); %Source meter
             %obj.equipment.EM = gpib('ni',0,13); fopen(obj.equipment.EM(1)); %Electrometer
             %obj.equipment.EM(2) = gpib('ni',0,14); fopen(obj.equipment.EM(2)); %Electrometer
+        end
+        function queryITC(obj,command)
+            clrdevice(obj.equipment.ITC503)
+            query(obj.equipment.ITC503,command)
         end
         function Name = IDN(obj,instr,ind)
             switch instr
@@ -130,36 +136,27 @@ classdef SetupControl < handle
             message=strcat(command,num2str(I));
             fprintf(obj.equipment.SM(ind),message);
         end
-%         %function T = ITC503_ReadT(obj,ind)
-%             if ind > length(obj.equipment.ITC503)
-%                 T= 'NaN';
-%             else
-%                 T=extractAfter(query(obj.equipment.ITC503,'R1'),1);
-%             end
-%         end
-%         %function Setpoint= ITC503_SetT(obj,ind,SetT,Tol,Time)
-%             if ind > length(obj.equipment.ITC503)
-%                 Setpoint='NaN'
-%             else
-%                 fprintf(obj.equipment.ITC503,'C1');%Remote Mode
-%                 fprintf(obj.equipment.ITC503,['T' sprintf(SetT)] %set temperature
-%                 Setpoint=query(obj.equipment.ITC503,'R0') % read setpoint
-%             end
-%             if ind > length(obj.equipment.ITC503)
-%                 %do nothing
-%             else
-%                 check=0;
-%                 while check<Time
-%                     T=extractAfter(query(obj.equipment.ITC503,'R1'),1); % read temperature
-%                     if Setpoint<T+Tol && Setpoint>T-Tol
-%                         check=check+1;
-%                     else 
-%                         check=0;
-%                     end
-%                     pause(1)
-%                 end
-%             end
-%         end
+        function T = ITC503_ReadT(obj)
+            T=extractAfter(queryITC(obj.equipment.ITC503,'R1'),1);
+        end
+        function stabilizationT=ITC503_SetT(obj,SetT,Tol,Time)
+                queryITC(obj.equipment.ITC503,'C3');%Remote Mode
+                queryITC(obj.equipment.ITC503,['T' num2str(SetT)]); %set temperature
+                queryITC(obj.equipment.ITC503,'A1');
+                queryITC(obj.equipment.ITC503,'L1');%Auto-PID
+                Setpoint=str2double(extractAfter(queryITC(obj.equipment.ITC503,'R0'),1));
+                check=0;
+                while check<Time
+                    T=str2double(extractAfter(queryITC(obj.equipment.ITC503,'R1'),1));% read temperature
+                    if Setpoint<T+Tol && Setpoint>T-Tol
+                        check=check+1;
+                    else 
+                        check=0;
+                    end
+                    pause(1)
+                end
+                stabilizationT=1;
+        end
         function [xr1,yt2] = LI_Read(obj,mode)
             xr1 = [];
             yt2 = [];
