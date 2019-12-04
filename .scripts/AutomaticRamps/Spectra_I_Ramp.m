@@ -1,10 +1,11 @@
-CurrentRamp=150e-9:-5e-9:5e-9;
-VRamp=-50:0.1:50;
+%CurrentRamp=150e-9:-5e-9:5e-9;
+VRamp=-2:0.1:2;
 DestinationPath='.\Measurements\AutoSave\Test\V=';
 % Find voltage control panel
 PCSFig=findobj('Type','Figure','Name','PCS');
 VCPanel=findobj('Parent',PCSFig,'Title','Source-Meter Control');
 % Find voltage controls
+Channel=[1 2];
 SMIndex=findobj('Parent',VCPanel,'Tag','SMIndex');
 SMChannel=findobj('Parent',VCPanel,'Tag','SMChannel');
 SMBias=findobj('Parent',VCPanel,'Tag','SMBias');
@@ -21,10 +22,10 @@ RunNow=WLRunNowButton.Callback;
 % Do measurements and save
 tic
 for n=1:length(VRamp)
-    SMIndex.String=num2str(2);
+    SMChannel.String=num2str(2);
     SMBias.String=num2str(VRamp(n)); % Set next voltage
     GoToV(); 
-    SMIndex.String=num2str(1);
+    SMChannel.String=num2str(1);
     ReadI(); %Read source-drain current
     if SMCurrent>n*0.2e-9 % 
         RunNow(); %Measure WL ramp

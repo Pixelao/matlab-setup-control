@@ -50,7 +50,7 @@ panel_UIHandles=uipanel('Title','Source-Meter Control','FontSize',10 ...
     ,'Position',[30 130 160 180]);
 addprop(f_control,'UIHandles'); %UIHandles stores all uicontrols
 f_control.UIHandles.txt_Vbias=uicontrol('Parent',panel_UIHandles,'Style','text','Position',[0 5 50 25],'String','Vbias');
-f_control.UIHandles.edit_Vbias=uicontrol('Parent',panel_UIHandles,'Style','edit','String','0','Position',[50 10 40 25],'BackgroundColor','w');
+f_control.UIHandles.edit_Vbias=uicontrol('Parent',panel_UIHandles,'Style','edit','String','0','Position',[50 10 40 25],'BackgroundColor','w','Tag','SMBias');
 f_control.UIHandles.b_GoToVbias=uicontrol('Parent',panel_UIHandles,'Style','PushButton','String','Go','Position',[100 10 40 25]...
     ,'Callback',@UIHandles_GoToVbiasCallback);
 
@@ -61,10 +61,10 @@ f_control.UIHandles.txt_Vdelay=uicontrol('Parent',panel_UIHandles,'Style','text'
 f_control.UIHandles.edit_Vdelay=uicontrol('Parent',panel_UIHandles,'Style','edit','String','0.1','Position',[100 70 40 25],'BackgroundColor','w');
 
 f_control.UIHandles.txt_Index=uicontrol('Parent',panel_UIHandles,'Style','text','Position',[0 125 40 25],'String','Index');
-f_control.UIHandles.edit_Index=uicontrol('Parent',panel_UIHandles,'Style','edit','Position',[40 135 20 20],'String','1');
+f_control.UIHandles.edit_Index=uicontrol('Parent',panel_UIHandles,'Style','edit','Position',[40 135 20 20],'String','1','Tag','SMIndex');
 
 f_control.UIHandles.txt_Channel=uicontrol('Parent',panel_UIHandles,'Style','text','Position',[70 125 50 25],'String','Channel');
-f_control.UIHandles.edit_Channel=uicontrol('Parent',panel_UIHandles,'Style','edit','Position',[120 135 20 20],'String','1');
+f_control.UIHandles.edit_Channel=uicontrol('Parent',panel_UIHandles,'Style','edit','Position',[120 135 20 20],'String','1','Tag','SMChannel');
 
 f_control.UIHandles.t_Readout = uicontrol('Parent',panel_UIHandles,'Style','togglebutton','Position',[10 100 50 25],'String','Read'...
     ,'Callback',@UIHandles_t_ReadoutCallback);

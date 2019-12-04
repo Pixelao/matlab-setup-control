@@ -7,6 +7,7 @@ WLfig=findobj('Name','WL ramp');
 % create sweep vector
 if WLfig.UIHandles.check_V_Custom.Value
     eval(strcat('SweepRamp =',WLfig.UIHandles.h_V_Custom.String,';'));
+    SweepDelay = str2num(WLfig.UIHandles.h_V_Delay.String);
 else
     SweepMin = str2num(WLfig.UIHandles.h_V_Min.String);
     SweepMmax = str2num(WLfig.UIHandles.h_V_Max.String);

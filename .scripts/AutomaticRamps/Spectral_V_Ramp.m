@@ -1,4 +1,4 @@
-VRamp=35:-2.5:0;
+VRamp=20:-2.5:0;
 DestinationPath='.\Measurements\AutoSave\Test\V=';
 % Find voltage control panel
 PCSFig=findobj('Type','Figure','Name','PCS');
