@@ -73,7 +73,7 @@ for n=1:length(SweepRamp)
         end
     end
     % measure lock-ins
-    [Data.LI(1:PCSfig.NumberOfLockins,1,n),Data.LI(1:PCSfig.NumberOfLockins,2,n)]=PCSfig.Control.LI_Read('xy');
+    [Data.LI(1:PCSfig.NumberOfLockins,1,n),Data.LI(1:PCSfig.NumberOfLockins,2,n)]=PCSfig.Control.LI_Read('rt');
     % measure electrometers
     for ind=1:PCSfig.NumberOfElectrometers
         myvalues=str2num(PCSfig.Control.EM_Read(ind));
