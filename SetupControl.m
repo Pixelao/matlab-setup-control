@@ -204,9 +204,9 @@ classdef SetupControl < handle
         end
         function r = GoToWL (obj,WL)
             disp(['Moving to ',num2str(WL)])
-            [exec_state,output]=system(['.resources\MS257com.exe -m ',num2str(WL)]);
+            [exec_state,output]=system(['.resources\NKTcom\NKTcom.exe -m ',num2str(WL)]);
             if exec_state==0
-                disp(['Laser set to ',num2str(WL),' nm'])
+                disp(['Laser set to ',num2str(WL),' %'])
                 r=str2num(output(17:end));
             else
                 r=[];
@@ -218,12 +218,12 @@ classdef SetupControl < handle
         end
         function p = GoToPower(obj,PW)
             disp(['Setting',num2str(PW)])
-            [exec_state,output]=system(['.resources\MS257com.exe -p ',num2str(WL)]);
+            [exec_state,output]=system(['.resources\MS257com.exe -p ',num2str(PW)]);
             if exec_state==0
                 disp(['Power set to ',num2str(PW),' %'])
-                r=str2num(output(17:end));
+                p=str2num(output(17:end));
             else
-                r=[];
+                p=[];
                 error(output)
             end
         end
