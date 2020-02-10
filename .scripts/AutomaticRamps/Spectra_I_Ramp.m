@@ -1,6 +1,6 @@
 %CurrentRamp=150e-9:-5e-9:5e-9;
 VRamp=-40:0.1:40;
-DestinationPath='.\Measurements\AutoSave\2020-02-03\V=';
+DestinationPath='.\Measurements\AutoSave\2020-02-07\V=';
 % Find voltage control panel
 PCSFig=findobj('Type','Figure','Name','PCS');
 VCPanel=findobj('Parent',PCSFig,'Title','Source-Meter Control');
@@ -19,10 +19,10 @@ WLRampFig=findobj('Type','Figure','Name','WL ramp');
 WLRunNowButton=findobj(WLRampFig,'String','Run Now');
 RunNow=WLRunNowButton.Callback;
 %move MS257
-system('C:\Users\Usuario\matlab-setup-control\.resources\MS257com.exe -m 730')
+system('C:\Users\Usuario\matlab-setup-control\.resources\MS257com.exe -m 800')
 % Do measurements and save
 j=1;
-I=[1:1:20 23:1:150].*1e-9;
+I=[1:1:30 30:2:500].*1e-9;
 for n=1:length(VRamp)
     SMBias.String=num2str(VRamp(n)); % Set next voltage
     GoToV();
@@ -36,7 +36,7 @@ for n=1:length(VRamp)
         MeasurementData=WLRampFig.MeasurementData;
         MeasurementData.time(j)=toc;
         save([DestinationPath num2str(VRamp(n)) '.mat'],'MeasurementData')
-        system('C:\Users\Usuario\matlab-setup-control\.resources\MS257com.exe -m 900')
+        system('C:\Users\Usuario\matlab-setup-control\.resources\MS257com.exe -m 800')
     end
 end
 disp('Measurement Ended')
