@@ -1,3 +1,0 @@
-exp_list=uicontrol('Parent',experiments,'Style','listbox','Max-Min',1,'Position',[100 140 40 16],'tag','List_ui','String','0');
-set(exp_list,'String',experiments,...
-	'Value',1)
