@@ -1,13 +1,11 @@
 classdef LI < handle
-
+    properties
+        equipment
+    end
     methods
 
-        function obj = LI
-            obj.LI=[]; % LockIn Obj
-        end
-
         function LI_Init(obj,gpibaddress)   % Initialize instruments
-            LI = gpib('ni',0,gpibaddress);  % Lock-in SR830
+            obj.equipment.LI = gpib('ni',0,gpibaddress);  % Lock-in SR830
             fopen(LI);                      % Lock-in SR830
         end
 
@@ -18,7 +16,7 @@ classdef LI < handle
                 error('GPIBManager.m: Mode should be either "XY", "RT" or "CH".')
                 return
             end
-            for h = LI
+            for h = obj.equipment.LI
                 if strcmp(mode,'XY')
                     value = query(h, 'SNAP?1,2');
                 elseif strcmp(mode,'RT')

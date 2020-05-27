@@ -4,14 +4,18 @@ classdef SetupControl < handle
     end
 
     methods
-
+        
         function obj = SetupControl
-            obj.equipment.EM=[];        % Electrometers Obj
-            obj.equipment.ITC503=[];    % ITC503 Obj
+            obj.equipment.LI = [];
+            obj.equipment.SM = [];
+            obj.equipment.EM = [];
+            obj.equipment.ITC503 = [];
         end
-
+        
         function InitComms(obj) % Initialize instruments
-            %instrreset;
+            %LI_Init(LI,4);
+            SM_Init(SM,1,6);
+            LI_Init(LI,4);
         end
 
         function CheckInstName = IDN(obj,instr,ind) % Check instrument Name

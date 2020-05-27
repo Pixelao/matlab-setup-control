@@ -106,27 +106,21 @@ PCSfig=findobj('Name','PCS');
 %
 % Create figure
 h_WL=figure();
-set(h_WL,'OuterPosition',[400 10 1000 670],'Color',0.95*[1 1 1],'ToolBar','figure'...
-    ,'NumberTitle','off','Name','WL ramp','MenuBar','figure')
+set(h_WL,'OuterPosition',[400 10 1000 670],'Color',0.95*[1 1 1],'ToolBar','figure','NumberTitle','off','Name','WL ramp','MenuBar','figure')
 addprop(h_WL,'UIHandles');
 addprop(h_WL,'MeasurementData');
 % IV panel
-panel_IVControls=uipanel('FontSize',10 ...
-    ,'Units','pixels','Position',[20 80 120 500]);
+panel_IVControls=uipanel('FontSize',10,'Units','pixels','Position',[20 80 120 500]);
 % Ramp Buttons
-panel_RunButtons=uipanel('Parent',panel_IVControls,'FontSize',10 ...
-    ,'Units','pixels','Position',[10 360 100 135]);
+panel_RunButtons=uipanel('Parent',panel_IVControls,'FontSize',10,'Units','pixels','Position',[10 360 100 135]);
 
-h_WL.UIHandles.b_RunNow=uicontrol('Parent',panel_RunButtons,'Style','PushButton','String','Run Now','Position',[10 100 80 25]...
-    ,'Callback',@WL_Ramp_RunNow);
+h_WL.UIHandles.b_RunNow=uicontrol('Parent',panel_RunButtons,'Style','PushButton','String','Run Now','Position',[10 100 80 25],'Callback',@WL_Ramp_RunNow);
 h_WL.UIHandles.b_Pause=uicontrol('Parent',panel_RunButtons,'Style','ToggleButton','String','Pause','Position',[10 70 80 25]);
 h_WL.UIHandles.b_Abort=uicontrol('Parent',panel_RunButtons,'Style','ToggleButton','String','Abort','Position',[10 40 80 25]);
-h_WL.UIHandles.b_SaveAs=uicontrol('Parent',panel_RunButtons,'Style','PushButton','String','Save As...','Position',[10 10 80 25]...
-    ,'Callback','FileSaveCallBack');
+h_WL.UIHandles.b_SaveAs=uicontrol('Parent',panel_RunButtons,'Style','PushButton','String','Save As...','Position',[10 10 80 25],'Callback','FileSaveCallBack');
 
 % measurement ramp settings
-panel_SweepConfig=uipanel('Parent',panel_IVControls,'FontSize',10 ...
-    ,'Units','pixels','Position',[10 10 100 220],'Title','Sweep config');
+panel_SweepConfig=uipanel('Parent',panel_IVControls,'FontSize',10,'Units','pixels','Position',[10 10 100 220],'Title','Sweep config');
 
 h_WL.UIHandles.txt_V_Custom=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 170 100 25],'String','Custom ramp');
 h_WL.UIHandles.h_V_Custom=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','[0:0.1:1 1:-0.1:0]','Position',[3 155 90 20],'BackgroundColor','w');

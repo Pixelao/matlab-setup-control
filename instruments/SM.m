@@ -1,13 +1,12 @@
 classdef SM < handle
+    properties
+        equipment
+    end
 
     methods
 
-        function obj = SM
-            obj.SM=[]; % SourceMeter Obj
-        end
-
         function SM_Init(obj,ind,gpibaddress) % Initialize instrument
-            SM = gpib('ni',ind,gpibaddress; 
+            obj.equipment.SM = gpib('ni',ind,gpibaddress);
             fopen(obj.SM(ind)); % SourceMeter 
         end
 
@@ -17,9 +16,9 @@ classdef SM < handle
             else
                 switch channel % select channel
                     case 1
-                        r=query(SM(ind),'print(smua.measure.i())');
+                        r=query(obj.equipment.SM(ind),'print(smua.measure.i())');
                     case 2
-                        r=query(SM(ind),'print(smub.measure.i())');
+                        r=query(obj.equipment.SM(ind),'print(smub.measure.i())');
                 end
             end
         end
@@ -30,9 +29,9 @@ classdef SM < handle
             else
                 switch channel % select channel
                     case 1
-                        r=query(SM(ind),'print(smua.measure.v())');
+                        r=query(obj.equipment.SM(ind),'print(smua.measure.v())');
                     case 2
-                        r=query(SM(ind),'print(smub.measure.v())');
+                        r=query(obj.equipment.SM(ind),'print(smub.measure.v())');
                 end
             end
         end
@@ -53,7 +52,7 @@ classdef SM < handle
             end
             for n=1:length(V) % do ramp
                 message=strcat(command,num2str(V(n)));
-                fprintf(SM(ind),message);
+                fprintf(obj.equipment.SM(ind),message);
                 pause(delay)
             end
             disp('ramp done')
@@ -75,7 +74,7 @@ classdef SM < handle
             end
             for n=1:length(I) % do ramp
                 message=strcat(command,num2str(I(n)));
-                fprintf(SM(ind),message);
+                fprintf(obj.equipment.SM(ind),message);
                 pause(delay)
             end
             disp('ramp done')
@@ -89,7 +88,7 @@ classdef SM < handle
                     command='smub.source.levelv = ';
             end
             message=strcat(command,num2str(V));
-            fprintf(SM(ind),message);
+            fprintf(obj.equipment.SM(ind),message);
         end
 
         function [] = SM_SetI(obj,ind,channel,I) % SourceMeter Set I
@@ -100,7 +99,7 @@ classdef SM < handle
                     command='smub.source.leveli = ';
             end
             message=strcat(command,num2str(I));
-            fprintf(SM(ind),message);
+            fprintf(obj.equipment.SM(ind),message);
         end
     end
 end
