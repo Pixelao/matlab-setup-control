@@ -75,6 +75,20 @@ f_control.UIHandles.txt_Readout = uicontrol('Parent',panel_UIHandles,'Style','ed
 panel_T=uipanel('Title','ITC 503 Control','FontSize',10,...
     'Units','pixels'...
     ,'Position',[30 5 160 120]);
+
+addprop(f_control,'T'); %T stores all Temperature Controls
+%SetT button
+
+f_control.T.txt_T=uicontrol('Parent',panel_T,'Style','text','Position',[0 5 50 25],'String','Set T(K)');
+f_control.T.edit_Vbias=uicontrol('Parent',panel_T,'Style','edit','String','0','Position',[50 10 40 25],'BackgroundColor','w','Tag','T');
+f_control.T.b_GoToT=uicontrol('Parent',panel_T,'Style','PushButton','String','Go','Position',[100 10 40 25]...
+    ,'Callback',@T_GoToTCallback);
+
+f_control.T.txt_Tol=uicontrol('Parent',panel_T,'Style','text','Position',[0 35 50 25],'String','Tol(K)');
+f_control.T.edit_Tol=uicontrol('Parent',panel_T,'Style','edit','String','0.01','Position',[50 40 40 25],'BackgroundColor','w','Tag','Tol');
+
+f_control.T.txt_Time=uicontrol('Parent',panel_T,'Style','text','Position',[0 65 50 25],'String','Time(s)');
+f_control.T.edit_Time=uicontrol('Parent',panel_T,'Style','edit','String','0.1','Position',[50 70 40 25],'BackgroundColor','w','Tag','Time');
 %% SM Callbacks
     function [] = UIHandles_t_ReadoutCallback(varargin)
         while f_control.UIHandles.t_Readout.Value
@@ -108,5 +122,12 @@ panel_T=uipanel('Title','ITC 503 Control','FontSize',10,...
         Vstep=str2num(f_control.UIHandles.edit_Vstep.String);
         delay=str2num(f_control.UIHandles.edit_Vdelay.String);
         f_control.Control.SM_RampV(ind,channel,Vstart,Vend,Vstep,delay)
+    end
+%% ITC Callbacks
+function [] = T_GoToTCallback(varargin)
+        SetT=str2num(f_control.T.edit_T.String);
+        Tol=str2num(f_control.T.edit_Tol.String);
+        Time=str2num(f_control.T.edit_Time.String);
+        f_control.Control.ITC503_SetT(obj,SetT,Tol,Time)
     end
 end
