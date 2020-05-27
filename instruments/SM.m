@@ -12,27 +12,27 @@ classdef SM < handle
         end
 
         function r = SM_ReadI(obj,ind,channel) % SourceMeter Read I
-            if ind > length(obj.SM)
+            if ind > length(SM)
                 r= 'NaN';
             else
                 switch channel % select channel
                     case 1
-                        r=query(obj.SM(ind),'print(smua.measure.i())');
+                        r=query(SM(ind),'print(smua.measure.i())');
                     case 2
-                        r=query(obj.SM(ind),'print(smub.measure.i())');
+                        r=query(SM(ind),'print(smub.measure.i())');
                 end
             end
         end
 
         function r = SM_ReadV(obj,ind,channel) % SourceMeter Read V
-            if ind > length(obj.SM)
+            if ind > length(SM)
                 r= 'NaN';
             else
                 switch channel % select channel
                     case 1
-                        r=query(obj.SM(ind),'print(smua.measure.v())');
+                        r=query(SM(ind),'print(smua.measure.v())');
                     case 2
-                        r=query(obj.SM(ind),'print(smub.measure.v())');
+                        r=query(SM(ind),'print(smub.measure.v())');
                 end
             end
         end
@@ -53,7 +53,7 @@ classdef SM < handle
             end
             for n=1:length(V) % do ramp
                 message=strcat(command,num2str(V(n)));
-                fprintf(obj.SM(ind),message);
+                fprintf(SM(ind),message);
                 pause(delay)
             end
             disp('ramp done')
@@ -75,7 +75,7 @@ classdef SM < handle
             end
             for n=1:length(I) % do ramp
                 message=strcat(command,num2str(I(n)));
-                fprintf(obj.SM(ind),message);
+                fprintf(SM(ind),message);
                 pause(delay)
             end
             disp('ramp done')
@@ -89,7 +89,7 @@ classdef SM < handle
                     command='smub.source.levelv = ';
             end
             message=strcat(command,num2str(V));
-            fprintf(obj.SM(ind),message);
+            fprintf(SM(ind),message);
         end
 
         function [] = SM_SetI(obj,ind,channel,I) % SourceMeter Set I
@@ -100,7 +100,7 @@ classdef SM < handle
                     command='smub.source.leveli = ';
             end
             message=strcat(command,num2str(I));
-            fprintf(obj.SM(ind),message);
+            fprintf(SM(ind),message);
         end
     end
 end
