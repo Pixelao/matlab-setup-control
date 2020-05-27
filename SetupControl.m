@@ -181,6 +181,14 @@ classdef SetupControl < handle
                 yt2(end+1) = value(2);
             end
         end
+        function [FREQ] = LI_FreqRead(obj)
+            for h = obj.equipment.LI
+                value=query(h, 'FREQ?');       
+                % Convert string to double 2x1 array
+                value = str2num(value);
+                FREQ(end+1) = value(1);
+            end
+        end
         function EM_Init(obj,ind,mode)
             %fprintf(obj.equipment.EM(ind),'*RST')
             fprintf(obj.equipment.EM(ind),'VOLT:GUAR OFF')% funcion interna?
