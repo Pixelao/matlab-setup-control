@@ -159,10 +159,15 @@ window.T.edit_OK = uicontrol('Parent',panel_TC,'Style','edit','String','OK','Pos
 
 %% LASER Callbacks
     function [] = LA_read_callback(varargin)
-        while window.UIHandles.LA_Readout.Value
-            p = window.Control.LA_read;
+        while window.UIHandles.t_LARead.Value
+            p = window.Control.LAread;
             window.UIHandles.e_LAReadout.String = num2str(p);
             pause(1);
         end
+    end
+
+    function [] = LA_go_callback(varargin)
+        pw=str2double(window.UIHandles.e_LAPower.String);
+        window.Control.LAgo(pw)
     end
 end

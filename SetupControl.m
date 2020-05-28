@@ -240,14 +240,14 @@ classdef SetupControl < handle
 
         function r = LA_read(~)
             [output]=system(['.resources\NKTcom\NKTcom.exe -r ',num2str(PW)]);
-            disp(['Laser Power ',output,'%'])
-            r=str2double(output);
+            disp(['Laser Power read ',num2str(output),'%'])
+            r=output;
         end
 
         function r = LA_go(~,PW)
             [output]=system(['.resources\NKTcom\NKTcom.exe -p ',num2str(PW)]);
-            disp(['Laser Power ',output,'%'])
-            r=str2double(output);
+            disp(['Laser Power set to',output,'%'])
+            r=PW;
         end
 
         function p = GoToPW(obj,PW)
