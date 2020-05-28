@@ -2,21 +2,22 @@ function [] = Setup_Control_UI ()
 %% Create window and buttons
 addpath(genpath(pwd))
 f_control=figure();
-set(f_control,'Name','PCS','NumberTitle','off','OuterPosition',[170,120,230,600],...
+set(f_control,'Name','PCS','NumberTitle','off','OuterPosition',[170,120,230,670],...
     'MenuBar','none','Color',0.95*[1 1 1])
-txt_Vbias=uicontrol('Parent',f_control,'Style','text','Position',[10 480 200 80],...
-    'String','V1 JorgeQ Nov2019');
+txt_version=uicontrol('Parent',f_control,'Style','text','Position',[10 540 200 80],...
+    'String','V2 Nanolab May2020');
 
 % Create setup control object and start communication
 addprop(f_control,'Control');
 f_control.Control = SetupControl;
-f_control.Control.InitComms;
+%f_control.Control.InitComms;
 
 % Count connected equipments
 addprop(f_control,'NumberOfLockins');
 addprop(f_control,'NumberOfSourceMeters');
 addprop(f_control,'NumberOfElectrometers');
 addprop(f_control,'SourceMeterChannels');
+addprop(f_control,'UIHandles'); %UIHandles stores all uicontrols
 f_control.NumberOfLockins = length(f_control.Control.equipment.LI);
 f_control.NumberOfSourceMeters=length(f_control.Control.equipment.SM);
 f_control.NumberOfElectrometers=length(f_control.Control.equipment.EM);
@@ -32,23 +33,38 @@ for ind=1:f_control.NumberOfSourceMeters
 end
 % Load Experiments panel
 panel_LE=uipanel('Title','Load Experiment','FontSize',10 ...
-    ,'Units','pixels','Position',[30 450 160 80]);
+    ,'Units','pixels','Position',[30 500 160 80]);
 LE.p_SelectExperiment = uicontrol('Parent',panel_LE,'Style','PopupMenu','String',ls('.scripts/*.m')...
     ,'Position',[10 30 140 25]);
 LE_LoadCallback=@(varargin) run(strcat('.scripts/',LE.p_SelectExperiment.String(LE.p_SelectExperiment.Value,:)));
 LE.b_LoadExperiment =  uicontrol('Parent',panel_LE,'Style','PushButton','String','Load Now'...
     ,'Position',[10 5 140 25],'Callback',LE_LoadCallback);
 
+% Laser Controls panel
+panel_LasC=uipanel('Title','Laser Control','FontSize',10 ...
+    ,'Units','pixels' ...
+    ,'Position',[30 460 160 40]);
+
 % Lock-In Controls panel
 panel_LIC=uipanel('Title','Lock-In Control','FontSize',10 ...
     ,'Units','pixels' ...
-    ,'Position',[30 380 160 70]);
+    ,'Position',[30 380 160 80]);
+f_control.UIHandles.txt_LIFreq=uicontrol('Parent',panel_LIC,'Style','text','Position',[0 5 50 20],'String','f(Hz)');
+f_control.UIHandles.edit_LIFreq=uicontrol('Parent',panel_LIC,'Style','edit','String','0','Position',[50 10 40 20],'BackgroundColor','w','Tag','SMBias');
+f_control.UIHandles.b_GoToLIFreq=uicontrol('Parent',panel_LIC,'Style','PushButton','String','Go','Position',[100 10 40 20]...
+    ,'Callback',@UIHandles_GoToLIFreqCallback);
+f_control.UIHandles.t_LIReadout = uicontrol('Parent',panel_LIC,'Style','togglebutton','Position',[5 35 40 25],'String','Read'...
+    ,'Callback',@UIHandles_t_LIReadoutCallback);
+f_control.UIHandles.edit_LIReadout = uicontrol('Parent',panel_LIC,'Style','edit','Position',[50 35 55 25],'BackgroundColor','k'...
+    ,'ForegroundColor','w','String','   ','Tag','LIReadout');
+f_control.UIHandles.edit_LIReadoutVar = uicontrol('Parent',panel_LIC,'Style','popupmenu','Position',[110 35 40 25]...
+    ,'String',{'f','R','?','X','Y'},'Tag','LIReadout');
 
 % Source-Meter Controls panel
 panel_UIHandles=uipanel('Title','Source-Meter Control','FontSize',10 ...
     ,'Units','pixels' ...
     ,'Position',[30 200 160 180]);
-addprop(f_control,'UIHandles'); %UIHandles stores all uicontrols
+
 f_control.UIHandles.txt_Vbias=uicontrol('Parent',panel_UIHandles,'Style','text','Position',[0 5 50 25],'String','Vbias');
 f_control.UIHandles.edit_Vbias=uicontrol('Parent',panel_UIHandles,'Style','edit','String','0','Position',[50 10 40 25],'BackgroundColor','w','Tag','SMBias');
 f_control.UIHandles.b_GoToVbias=uicontrol('Parent',panel_UIHandles,'Style','PushButton','String','Go','Position',[100 10 40 25]...
@@ -95,13 +111,16 @@ f_control.T.t_Readout = uicontrol('Parent',panel_T,'Style','togglebutton','Posit
 f_control.T.txt_Readout = uicontrol('Parent',panel_T,'Style','edit','Position',[80 140 70 25],'BackgroundColor','k'...
     ,'ForegroundColor','w','String','   ','Tag','T');
 % Read Setpoint
-f_control.T.t_SettReadout = uicontrol('Parent',panel_T,'Style','togglebutton','Position',[5 110 70 25],'String','Read SetT(K)'...
+f_control.T.t_SettReadout = uicontrol('Parent',panel_T,'Style','togglebutton','Position',[5 110 70 25],'String','Set T(K)'...
     ,'Callback',@T_Sett_ReadoutCallback);
 f_control.T.txt_SettReadout = uicontrol('Parent',panel_T,'Style','edit','Position',[80 110 70 25],'BackgroundColor','k'...
     ,'ForegroundColor','w','String','   ','Tag','SetT');
 
 %Stabilization Temp
 f_control.T.edit_OK=uicontrol('Parent',panel_T,'Style','edit','String','OK','Position',[110 70 40 25],'BackgroundColor','w','Tag','OK');
+
+%% LI Callbacks
+
 
 %% SM Callbacks
     function [] = UIHandles_t_ReadoutCallback(varargin)
