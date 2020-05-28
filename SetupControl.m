@@ -237,15 +237,25 @@ classdef SetupControl < handle
                 error(output)
             end
         end
-        function r = ReadWL(obj)
-            
+
+        function r = LA_read(~)
+            [output]=system(['.resources\NKTcom\NKTcom.exe -r ',num2str(PW)]);
+            disp(['Laser Power ',output,'%'])
+            r=str2double(output);
         end
+
+        function r = LA_go(~,PW)
+            [output]=system(['.resources\NKTcom\NKTcom.exe -p ',num2str(PW)]);
+            disp(['Laser Power ',output,'%'])
+            r=str2double(output);
+        end
+
         function p = GoToPW(obj,PW)
             disp(['Setting',num2str(PW)])
             output=system(['.resources\NKTcom\NKTcom.exe -p',num2str(PW)]);
             if output=="DONE"
                 disp(['Power set to ',num2str(PW),' %'])
-                p=str2num(output(17:end));
+                p=str2double(PW);
             else
                 p=[];
                 error(output)
