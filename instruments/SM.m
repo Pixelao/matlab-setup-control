@@ -14,7 +14,7 @@ classdef SM < handle
             if ind > length(SM)
                 r= 'NaN';
             else
-                switch channel % select channel
+                switch channel % select channels
                     case 1
                         r=query(obj.equipment.SM(ind),'print(smua.measure.i())');
                     case 2
