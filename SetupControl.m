@@ -10,7 +10,7 @@ classdef SetupControl < handle
             obj.equipment.ITC503=[];%TemperatureController
         end
         function InitComms(obj)
-%            instrreset;
+            instrreset;
             obj.equipment.LI = gpib('ni',0,8); fopen(obj.equipment.LI); %Lock-in SR830
             %obj.equipment.LI(2) = gpib('ni',0,9); fopen(obj.equipment.LI(2)); %Lock-in SR830
             obj.equipment.SM = gpib('ni',0,26); fopen(obj.equipment.SM(1)); %Source meter
@@ -133,13 +133,19 @@ classdef SetupControl < handle
             message=strcat(command,num2str(I));
             fprintf(obj.equipment.SM(ind),message);
         end
-        function queryITC(obj,command)
+        function x=queryITC(obj,command)
             clrdevice(obj.equipment.ITC503)
-            query(obj.equipment.ITC503,command)
+            x=query(obj.equipment.ITC503,command);
         end
         function T = ITC503_ReadT(obj)
-            queryITC(obj.equipment.ITC503,'C3')
-            T=str2double(extractAfter(queryITC(obj,'R1'),1));% read temperature
+            queryITC(obj,'C3');
+            x=queryITC(obj,'R1');
+            T=str2double(extractAfter(x,1));% read temperature
+        end
+        function St = ITC503_ReadSetT(obj)
+            queryITC(obj,'C3');
+            x=queryITC(obj,'R0');
+            St=str2double(extractAfter(x,1));% read set temperature
         end
         function stabilizationT = ITC503_SetT(obj,SetT,Tol,Time)
                 queryITC(obj.equipment.ITC503,'C3');%Remote Mode
@@ -150,6 +156,7 @@ classdef SetupControl < handle
                 check=0;
                 while check<Time
                     T=str2double(extractAfter(queryITC(obj.equipment.ITC503,'R1'),1));% read temperature
+                    stabilization=0;
                     if Setpoint<T+Tol && Setpoint>T-Tol
                         check=check+1;
                     else 
@@ -183,6 +190,7 @@ classdef SetupControl < handle
             end
         end
         function [FREQ] = LI_FreqRead(obj)
+            FREQ=[];
             for h = obj.equipment.LI
                 value=query(h, 'FREQ?');       
                 % Convert string to double 2x1 array

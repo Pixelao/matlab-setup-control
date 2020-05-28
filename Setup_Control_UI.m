@@ -4,7 +4,7 @@ addpath(genpath(pwd))
 f_control=figure();
 set(f_control,'Name','PCS','NumberTitle','off','OuterPosition',[170,120,230,600],...
     'MenuBar','none','Color',0.95*[1 1 1])
-txt_Vbias=uicontrol('Parent',f_control,'Style','text','Position',[10 450 200 80],...
+txt_Vbias=uicontrol('Parent',f_control,'Style','text','Position',[10 480 200 80],...
     'String','V1 JorgeQ Nov2019');
 
 % Create setup control object and start communication
@@ -32,7 +32,7 @@ for ind=1:f_control.NumberOfSourceMeters
 end
 % Load Experiments panel
 panel_LE=uipanel('Title','Load Experiment','FontSize',10 ...
-    ,'Units','pixels','Position',[30 420 160 80]);
+    ,'Units','pixels','Position',[30 450 160 80]);
 LE.p_SelectExperiment = uicontrol('Parent',panel_LE,'Style','PopupMenu','String',ls('.scripts/*.m')...
     ,'Position',[10 30 140 25]);
 LE_LoadCallback=@(varargin) run(strcat('.scripts/',LE.p_SelectExperiment.String(LE.p_SelectExperiment.Value,:)));
@@ -42,12 +42,12 @@ LE.b_LoadExperiment =  uicontrol('Parent',panel_LE,'Style','PushButton','String'
 % Lock-In Controls panel
 panel_LIC=uipanel('Title','Lock-In Control','FontSize',10 ...
     ,'Units','pixels' ...
-    ,'Position',[30 350 160 70]);
+    ,'Position',[30 380 160 70]);
 
 % Source-Meter Controls panel
 panel_UIHandles=uipanel('Title','Source-Meter Control','FontSize',10 ...
     ,'Units','pixels' ...
-    ,'Position',[30 170 160 180]);
+    ,'Position',[30 200 160 180]);
 addprop(f_control,'UIHandles'); %UIHandles stores all uicontrols
 f_control.UIHandles.txt_Vbias=uicontrol('Parent',panel_UIHandles,'Style','text','Position',[0 5 50 25],'String','Vbias');
 f_control.UIHandles.edit_Vbias=uicontrol('Parent',panel_UIHandles,'Style','edit','String','0','Position',[50 10 40 25],'BackgroundColor','w','Tag','SMBias');
@@ -74,26 +74,35 @@ f_control.UIHandles.txt_Readout = uicontrol('Parent',panel_UIHandles,'Style','ed
 %Temperature control panel
 panel_T=uipanel('Title','ITC 503 Control','FontSize',10,...
     'Units','pixels'...
-    ,'Position',[30 5 160 160]);
+    ,'Position',[30 5 160 190]);
 
 addprop(f_control,'T'); %T stores all Temperature Controls
-%SetT button
 
+%SetT button
 f_control.T.txt_T=uicontrol('Parent',panel_T,'Style','text','Position',[0 5 50 25],'String','Set T(K)');
-f_control.T.edit_Vbias=uicontrol('Parent',panel_T,'Style','edit','String','0','Position',[50 10 40 25],'BackgroundColor','w','Tag','T');
+f_control.T.edit_T=uicontrol('Parent',panel_T,'Style','edit','String','0','Position',[50 10 40 25],'BackgroundColor','w','Tag','T');
 f_control.T.b_GoToT=uicontrol('Parent',panel_T,'Style','PushButton','String','Go','Position',[100 10 40 25]...
     ,'Callback',@T_GoToTCallback);
-
+%Tolerance button
 f_control.T.txt_Tol=uicontrol('Parent',panel_T,'Style','text','Position',[0 35 50 25],'String','Tol(K)');
 f_control.T.edit_Tol=uicontrol('Parent',panel_T,'Style','edit','String','0.01','Position',[50 40 40 25],'BackgroundColor','w','Tag','Tol');
-
+%Time of Stabilization button
 f_control.T.txt_Time=uicontrol('Parent',panel_T,'Style','text','Position',[0 65 50 25],'String','Time(s)');
 f_control.T.edit_Time=uicontrol('Parent',panel_T,'Style','edit','String','0.1','Position',[50 70 40 25],'BackgroundColor','w','Tag','Time');
-
-f_control.T.t_Readout = uicontrol('Parent',panel_T,'Style','togglebutton','Position',[10 100 50 25],'String','Read'...
+% Read temp button
+f_control.T.t_Readout = uicontrol('Parent',panel_T,'Style','togglebutton','Position',[5 140 70 25],'String','Read T(K)'...
     ,'Callback',@T_t_ReadoutCallback);
-f_control.T.txt_Readout = uicontrol('Parent',panel_T,'Style','edit','Position',[70 100 70 25],'BackgroundColor','k'...
+f_control.T.txt_Readout = uicontrol('Parent',panel_T,'Style','edit','Position',[80 140 70 25],'BackgroundColor','k'...
     ,'ForegroundColor','w','String','   ','Tag','T');
+% Read Setpoint
+f_control.T.t_SettReadout = uicontrol('Parent',panel_T,'Style','togglebutton','Position',[5 110 70 25],'String','Read SetT(K)'...
+    ,'Callback',@T_Sett_ReadoutCallback);
+f_control.T.txt_SettReadout = uicontrol('Parent',panel_T,'Style','edit','Position',[80 110 70 25],'BackgroundColor','k'...
+    ,'ForegroundColor','w','String','   ','Tag','SetT');
+
+%Stabilization Temp
+f_control.T.edit_OK=uicontrol('Parent',panel_T,'Style','edit','String','OK','Position',[110 70 40 25],'BackgroundColor','w','Tag','OK');
+
 %% SM Callbacks
     function [] = UIHandles_t_ReadoutCallback(varargin)
         while f_control.UIHandles.t_Readout.Value
@@ -129,16 +138,26 @@ f_control.T.txt_Readout = uicontrol('Parent',panel_T,'Style','edit','Position',[
         f_control.Control.SM_RampV(ind,channel,Vstart,Vend,Vstep,delay)
     end
 %% ITC Callbacks
-    function []=T_t_ReadoutCallback
+    function []=T_t_ReadoutCallback(varargin)
         while f_control.T.t_Readout.Value
-            t = str2double(f_control.Control.ITC503_ReadT(ind,channel));
-            f_control.UIHandles.txt_Readout.String = num2str(t(:),'%10.3e');
+            t = f_control.Control.ITC503_ReadT;
+            f_control.T.txt_Readout.String = num2str(t(:),'%10.3f');
+            pause(1);
         end
     end
-function [] = T_GoToTCallback(varargin)
-        SetT=str2num(f_control.T.edit_T.String);
-        Tol=str2num(f_control.T.edit_Tol.String);
-        Time=str2num(f_control.T.edit_Time.String);
-        f_control.Control.ITC503_SetT(obj,SetT,Tol,Time)
+    function [] = T_GoToTCallback(varargin)
+            SetT=str2num(f_control.T.edit_T.String);
+            Tol=str2num(f_control.T.edit_Tol.String);
+            Time=str2num(f_control.T.edit_Time.String);
+            stabilization=f_control.Control.ITC503_SetT(SetT,Tol,Time);
+            if stabilization==0
+                f_control.T.edit_OK.String = 'Not OK';
+            else
+                f_control.T.edit_OK.String = 'OK';
+            end
+    end
+    function []=T_Sett_ReadoutCallback(varargin)
+            St=f_control.Control.ITC503_ReadSetT
+            f_control.T.txt_SettReadout.String = num2str(St(:),'%10.3f');
     end
 end
