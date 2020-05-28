@@ -22,10 +22,6 @@ classdef SetupControl < handle
             %obj.equipment.EM = gpib('ni',0,13); fopen(obj.equipment.EM(1)); %Electrometer
             %obj.equipment.EM(2) = gpib('ni',0,14); fopen(obj.equipment.EM(2)); %Electrometer
         end
-        function queryITC(obj,command)
-            clrdevice(obj.equipment.ITC503)
-            query(obj.equipment.ITC503,command)
-        end
         function Name = IDN(obj,instr,ind)
             switch instr
                 case 'LI'
@@ -137,8 +133,13 @@ classdef SetupControl < handle
             message=strcat(command,num2str(I));
             fprintf(obj.equipment.SM(ind),message);
         end
+        function queryITC(obj,command)
+            clrdevice(obj.equipment.ITC503)
+            query(obj.equipment.ITC503,command)
+        end
         function T = ITC503_ReadT(obj)
-            T=extractAfter(queryITC(obj.equipment.ITC503,'R1'),1);
+            queryITC(obj.equipment.ITC503,'C3')
+            T=str2double(extractAfter(queryITC(obj,'R1'),1));% read temperature
         end
         function stabilizationT = ITC503_SetT(obj,SetT,Tol,Time)
                 queryITC(obj.equipment.ITC503,'C3');%Remote Mode
