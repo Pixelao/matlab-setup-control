@@ -165,11 +165,13 @@ f_control.T.edit_OK=uicontrol('Parent',panel_T,'Style','edit','String','OK','Pos
         end
     end
     function [] = T_GoToTCallback(varargin)
+            x=0;
             SetT=str2num(f_control.T.edit_T.String);
             Tol=str2num(f_control.T.edit_Tol.String);
             Time=str2num(f_control.T.edit_Time.String);
             stabilization=f_control.Control.ITC503_SetT(SetT,Tol,Time);
-            if stabilization==0
+            x=stabilization;
+            if x==0
                 f_control.T.edit_OK.String = 'Not OK';
             else
                 f_control.T.edit_OK.String = 'OK';
