@@ -9,7 +9,7 @@ function [] = Setup_Control_UI ()
     % Create setup control object and start communication
     addprop(window,'Control');
     window.Control = SetupControl;
-    window.Control.InitComms;
+    %window.Control.InitComms;
     
     % Count connected equipments
     addprop(window,'NumberOfLockins');
@@ -33,24 +33,25 @@ function [] = Setup_Control_UI ()
         end
     end
     
-    % LE Panel (Load Experiments)
+    %% LE Panel (Load Experiments)
     panel_LE = uipanel('Title','Load Experiment','FontSize',10,'Units','pixels','Position',[30 310 160 80]);
     LE.p_SelectExperiment = uicontrol('Parent',panel_LE,'Style','PopupMenu','String',ls('.scripts/*.m'),'Position',[10 30 140 25]);
     LE_loadnow_callback = @(varargin) run(strcat('.scripts/',LE.p_SelectExperiment.String(LE.p_SelectExperiment.Value,:)));
     LE.b_LoadExperiment = uicontrol('Parent',panel_LE,'Style','PushButton','String','Load Now','Position',[10 5 140 25],'Callback',LE_loadnow_callback);
     
-    % LA PANEL (Laser)
+    %% LA PANEL (Laser)
     panel_LA = uipanel('Title','Laser Control','FontSize',10,'Units','pixels','Position',[200 220 160 130]);
     window.UIHandles.t_LApercent = uicontrol('Parent',panel_LA,'Style','text','Position',[7 7 55 20],'String','POWER %');
     window.UIHandles.e_LAPower = uicontrol('Parent',panel_LA,'Style','edit','String','0','Position',[65 10 40 20],'BackgroundColor','w','Tag','LABias');
-    window.UIHandles.b_GoToLAPower = uicontrol('Parent',panel_LA,'Style','PushButton','String','Go','Position',[110 7 40 25],'Callback',@LA_go_callback);
-    window.UIHandles.t_LApercent = uicontrol('Parent',panel_LA,'Style','text','Position',[0 80 100 25],'String','Emission');
+    window.UIHandles.b_GoToLAPower = uicontrol('Parent',panel_LA,'Style','PushButton','String','Set','Position',[110 7 40 25],'Callback',@LA_go_callback);
+    window.UIHandles.t_LApercent = uicontrol('Parent',panel_LA,'Style','text','Position',[0 80 100 25],'String','Turn Emission');
     window.UIHandles.b_LAOnPower = uicontrol('Parent',panel_LA,'Style','PushButton','String','ON','Position',[5 65 40 25],'BackgroundColor','green','ForegroundColor','black','Callback',@LA_on_callback);
     window.UIHandles.b_LAOffPower = uicontrol('Parent',panel_LA,'Style','PushButton','String','OFF','Position',[50 65 40 25],'BackgroundColor','red','ForegroundColor','white','Callback',@LA_off_callback);
     window.UIHandles.t_LARead = uicontrol('Parent',panel_LA,'Style','togglebutton','Position',[5 35 40 25],'String','Read','Callback',@LA_read_callback);
-    window.UIHandles.e_LAReadout = uicontrol('Parent',panel_LA,'Style','edit','Position',[50 35 100 25],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','LAReadout');
+    window.UIHandles.e_LAReadout = uicontrol('Parent',panel_LA,'Style','edit','Position',[50 35 80 25],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','LAReadout');
+    window.UIHandles.t_LApercent2 = uicontrol('Parent',panel_LA,'Style','text','Position',[132 42 15 15],'FontSize',11,'String','%');
     
-    % LI Panel (Lock Ins)
+    %% LI Panel (Lock Ins)
     panel_LIC = uipanel('Title','Lock-In Control','FontSize',10,'Units','pixels','Position',[30 220 160 80]);
     window.UIHandles.txt_LIFreq = uicontrol('Parent',panel_LIC,'Style','text','Position',[7 7 55 20],'String','f(Hz)');
     window.UIHandles.edit_LIFreq = uicontrol('Parent',panel_LIC,'Style','edit','String','0','Position',[65 10 40 20],'BackgroundColor','w','Tag','LIBias');
@@ -75,7 +76,7 @@ function [] = Setup_Control_UI ()
     window.UIHandles.t_Readout = uicontrol('Parent',panel_SM,'Style','togglebutton','Position',[10 100 50 25],'String','Read','Callback',@SM_read_callback);
     window.UIHandles.txt_Readout = uicontrol('Parent',panel_SM,'Style','edit','Position',[70 100 70 25],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','SMCurrent');
     
-    %%TC Panel (Temp Controller)
+    %% TC Panel (Temp Controller)
     panel_TC = uipanel('Title','ITC 503 Control','FontSize',10,'Units','pixels','Position',[200 20 160 190]);
     window.T.txt_T = uicontrol('Parent',panel_TC,'Style','text','Position',[0 5 50 25],'String','Set T(K)');
     window.T.edit_T = uicontrol('Parent',panel_TC,'Style','edit','String','0','Position',[50 10 40 25],'BackgroundColor','w','Tag','T');
