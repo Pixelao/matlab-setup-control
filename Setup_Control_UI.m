@@ -9,7 +9,7 @@ function [] = Setup_Control_UI ()
     % Create setup control object and start communication
     addprop(window,'Control');
     window.Control = SetupControl;
-    %window.Control.InitComms;
+    window.Control.InitComms;
     
     % Count connected equipments
     addprop(window,'NumberOfLockins');
@@ -157,21 +157,21 @@ function [] = Setup_Control_UI ()
     
     %% LI Callbacks
     function [] = UIHandles_LIReadoutCallback(varargin)
-        while window.UIHandles.t_LIReadout
+        while window.UIHandles.t_LIReadout.Value
             switch window.UIHandles.popup_LIReadoutVar.Value
                 case 1
-                    output = LI_FreqRead(obj);
+                    output = window.Control.LI_FreqRead;
                 case 2
-                    [xr,yt] = window.Control.LI_Read(obj,'rt');
+                    [xr,yt] = window.Control.LI_Read('rt');
                     output = xr;
                 case 3
-                    [xr,yt] = window.Control.LI_Read(obj,'rt');
+                    [xr,yt] = window.Control.LI_Read('rt');
                     output = yt;
                 case 4
-                    [xr,yt] = window.Control.LI_Read(obj,'xy');
+                    [xr,yt] = window.Control.LI_Read('xy');
                     output = xr;
                 case 5
-                    [xr,yt] = window.Control.LI_Read(obj,'xy');
+                    [xr,yt] = window.Control.LI_Read('xy');
                     output = yt;
             end
             window.UIHandles.txt_LIReadout.String=num2str(output,'%10.3f');
@@ -181,7 +181,7 @@ function [] = Setup_Control_UI ()
     function [] = UIHandles_GoToLIFreqCallback(varargin)
         ind = 1;
         FREQ = str2num(window.UIHandles.edit_LIFreq.String)
-        window.Control.LI_FreqSet(obj,ind,FREQ)
+        window.Control.LI_FreqSet(ind,FREQ)
     end
     
     %% LASER Callbacks
