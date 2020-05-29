@@ -170,4 +170,12 @@ window.T.edit_OK = uicontrol('Parent',panel_TC,'Style','edit','String','OK','Pos
         pw=str2double(window.UIHandles.e_LAPower.String);
         window.Control.LAgo(pw)
     end
+
+    function [] = LA_on_callback(varargin)
+        window.Control.LAon()
+    end
+
+    function [] = LA_off_callback(varargin)
+        window.Control.LAoff()
+    end
 end

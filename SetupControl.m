@@ -238,16 +238,26 @@ classdef SetupControl < handle
             end
         end
 
-        function r = LA_read(~)
-            [output]=system(['.resources\NKTcom\NKTcom.exe -r ',num2str(PW)]);
+        function r = LAread(~)
+            [output]=system('.resources\NKTcom\NKTcom.exe -r ');
             disp(['Laser Power read ',num2str(output),'%'])
             r=output;
         end
 
-        function r = LA_go(~,PW)
+        function r = LAgo(~,PW)
             [output]=system(['.resources\NKTcom\NKTcom.exe -p ',num2str(PW)]);
             disp(['Laser Power set to',output,'%'])
             r=PW;
+        end
+
+        function LAon(~)
+            system('.resources\NKTcom\NKTcom.exe -on');
+            disp('Laser Emission ON')
+        end
+
+        function LAoff(~)
+            system('.resources\NKTcom\NKTcom.exe -off ');
+            disp('Laser Emission OFF')
         end
 
         function p = GoToPW(obj,PW)
