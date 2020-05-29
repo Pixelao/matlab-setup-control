@@ -238,28 +238,6 @@ classdef SetupControl < handle
             end
         end
 
-        function r = LAread(~)
-            [output]=system('.resources\NKTcom\NKTcom.exe -r ');
-            disp(['Laser Power read ',num2str(output),'%'])
-            r=output;
-        end
-
-        function r = LAgo(~,PW)
-            [output]=system(['.resources\NKTcom\NKTcom.exe -p ',num2str(PW)]);
-            disp(['Laser Power set to',output,'%'])
-            r=PW;
-        end
-
-        function LAon(~)
-            system('.resources\NKTcom\NKTcom.exe -on');
-            disp('Laser Emission ON')
-        end
-
-        function LAoff(~)
-            system('.resources\NKTcom\NKTcom.exe -off ');
-            disp('Laser Emission OFF')
-        end
-
         function p = GoToPW(obj,PW)
             disp(['Setting',num2str(PW)])
             output=system(['.resources\NKTcom\NKTcom.exe -p',num2str(PW)]);
@@ -270,6 +248,32 @@ classdef SetupControl < handle
                 p=[];
                 error(output)
             end
+        end
+        
+        %LA functions
+        function r = LAread(~)
+            [exec_state,output]=system('.resources\NKTcom\NKTcom.exe -r');
+            if exec_state==0
+                r = extractAfter(output,".dll");
+            else
+                r=999;
+                error(output)
+            end
+        end
+
+        function LAgo(~,PW)
+            system(['.resources\NKTcom\NKTcom.exe -p ',num2str(PW)]);
+            disp(['Laser Power set to',PW,'%'])
+        end
+
+        function LAon(~)
+            system('.resources\NKTcom\NKTcom.exe -on');
+            disp('Laser Emission ON')
+        end
+
+        function LAoff(~)
+            system('.resources\NKTcom\NKTcom.exe -off ');
+            disp('Laser Emission OFF')
         end
     end
 end
