@@ -254,7 +254,7 @@ classdef SetupControl < handle
         function r = LAread(~)
             [exec_state,output]=system('.resources\NKTcom\NKTcom.exe -r');
             if exec_state==0
-                r = extractAfter(output,".dll");
+                r = output;
             else
                 r=999;
                 error(output)
