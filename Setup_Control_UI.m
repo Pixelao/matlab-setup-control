@@ -52,13 +52,13 @@ function [] = Setup_Control_UI ()
     window.UIHandles.t_LApercent2 = uicontrol('Parent',panel_LA,'Style','text','Position',[132 42 15 15],'FontSize',11,'String','%');
     
     %% LI Panel (Lock Ins)
-    panel_LIC = uipanel('Title','Lock-In Control','FontSize',10,'Units','pixels','Position',[30 220 160 80]);
-    window.UIHandles.txt_LIFreq = uicontrol('Parent',panel_LIC,'Style','text','Position',[7 7 55 20],'String','f(Hz)');
-    window.UIHandles.edit_LIFreq = uicontrol('Parent',panel_LIC,'Style','edit','String','0','Position',[65 10 40 20],'BackgroundColor','w','Tag','LIBias');
-    window.UIHandles.b_GoToLIFreq = uicontrol('Parent',panel_LIC,'Style','PushButton','String','Go','Position',[110 7 40 25],'Callback',@LI_go_callback);
-    window.UIHandles.t_LIReadout = uicontrol('Parent',panel_LIC,'Style','togglebutton','Position',[5 35 40 25],'String','Read','Callback',@LI_read_callback);
-    window.UIHandles.edit_LIReadout = uicontrol('Parent',panel_LIC,'Style','edit','Position',[50 35 55 25],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','LIReadout');
-    window.UIHandles.edit_LIReadoutVar = uicontrol('Parent',panel_LIC,'Style','popupmenu','Position',[110 35 40 25],'String',{'f','R','?','X','Y'},'Tag','LIReadout');
+    panel_LIC=uipanel('Title','Lock-In Control','FontSize',10,'Units','pixels','Position',[30 380 160 80]);
+    window.UIHandles.txt_LIFreq=uicontrol('Parent',panel_LIC,'Style','text','Position',[0 5 50 20],'String','f(Hz)');
+    window.UIHandles.edit_LIFreq=uicontrol('Parent',panel_LIC,'Style','edit','String','0','Position',[50 10 40 20],'BackgroundColor','w','Tag','LIFreq');
+    window.UIHandles.b_GoToLIFreq=uicontrol('Parent',panel_LIC,'Style','PushButton','String','Go','Position',[100 10 40 20],'Callback',@UIHandles_GoToLIFreqCallback);
+    window.UIHandles.t_LIReadout = uicontrol('Parent',panel_LIC,'Style','togglebutton','Position',[5 35 40 25],'String','Read','Callback',@UIHandles_LIReadoutCallback);
+    window.UIHandles.txt_LIReadout = uicontrol('Parent',panel_LIC,'Style','text','Position',[50 35 55 25],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','LIReadout');
+    window.UIHandles.popup_LIReadoutVar = uicontrol('Parent',panel_LIC,'Style','popupmenu','Position',[110 35 40 25],'String',{'f','R','?','X','Y'},'Tag','LIReadout');
     
     %% SM Panel (Source Meters)
     panel_SM = uipanel('Title','Source-Meter Control','FontSize',10,'Units','pixels','Position',[30 20 160 190]);
@@ -156,7 +156,33 @@ function [] = Setup_Control_UI ()
     
     
     %% LI Callbacks
-    % TODO
+    function [] = UIHandles_LIReadoutCallback(varargin)
+        while window.UIHandles.t_LIReadout
+            switch window.UIHandles.popup_LIReadoutVar.Value
+                case 1
+                    output = LI_FreqRead(obj);
+                case 2
+                    [xr,yt] = window.Control.LI_Read(obj,'rt');
+                    output = xr;
+                case 3
+                    [xr,yt] = window.Control.LI_Read(obj,'rt');
+                    output = yt;
+                case 4
+                    [xr,yt] = window.Control.LI_Read(obj,'xy');
+                    output = xr;
+                case 5
+                    [xr,yt] = window.Control.LI_Read(obj,'xy');
+                    output = yt;
+            end
+            window.UIHandles.txt_LIReadout.String=num2str(output,'%10.3f');
+            pause(0.1);
+        end
+    end
+    function [] = UIHandles_GoToLIFreqCallback(varargin)
+        ind = 1;
+        FREQ = str2num(window.UIHandles.edit_LIFreq.String)
+        window.Control.LI_FreqSet(obj,ind,FREQ)
+    end
     
     %% LASER Callbacks
         function [] = LA_read_callback(varargin)
