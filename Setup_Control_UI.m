@@ -52,10 +52,10 @@ function [] = Setup_Control_UI ()
     window.UIHandles.t_LApercent2 = uicontrol('Parent',panel_LA,'Style','text','Position',[132 42 15 15],'FontSize',11,'String','%');
     
     %% LI Panel (Lock Ins)
-    panel_LIC=uipanel('Title','Lock-In Control','FontSize',10,'Units','pixels','Position',[30 380 160 80]);
-    window.UIHandles.txt_LIFreq=uicontrol('Parent',panel_LIC,'Style','text','Position',[0 5 50 20],'String','f(Hz)');
-    window.UIHandles.edit_LIFreq=uicontrol('Parent',panel_LIC,'Style','edit','String','0','Position',[50 10 40 20],'BackgroundColor','w','Tag','LIFreq');
-    window.UIHandles.b_GoToLIFreq=uicontrol('Parent',panel_LIC,'Style','PushButton','String','Go','Position',[100 10 40 20],'Callback',@UIHandles_GoToLIFreqCallback);
+    panel_LIC=uipanel('Title','Lock-In Control','FontSize',10,'Units','pixels','Position',[30 220 160 80]);
+    window.UIHandles.txt_LIFreq=uicontrol('Parent',panel_LIC,'Style','text','Position',[7 7 55 20],'String','f(Hz)');
+    window.UIHandles.edit_LIFreq=uicontrol('Parent',panel_LIC,'Style','edit','String','0','Position',[65 10 40 20],'BackgroundColor','w','Tag','LIFreq');
+    window.UIHandles.b_GoToLIFreq=uicontrol('Parent',panel_LIC,'Style','PushButton','String','Go','Position',[110 7 40 25],'Callback',@UIHandles_GoToLIFreqCallback);
     window.UIHandles.t_LIReadout = uicontrol('Parent',panel_LIC,'Style','togglebutton','Position',[5 35 40 25],'String','Read','Callback',@UIHandles_LIReadoutCallback);
     window.UIHandles.txt_LIReadout = uicontrol('Parent',panel_LIC,'Style','text','Position',[50 35 55 25],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','LIReadout');
     window.UIHandles.popup_LIReadoutVar = uicontrol('Parent',panel_LIC,'Style','popupmenu','Position',[110 35 40 25],'String',{'f','R','?','X','Y'},'Tag','LIReadout');
