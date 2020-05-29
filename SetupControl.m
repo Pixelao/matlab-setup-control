@@ -263,17 +263,14 @@ classdef SetupControl < handle
 
         function LAgo(~,PW)
             system(['.resources\NKTcom\NKTcom.exe -p ',num2str(PW)]);
-            disp(['Laser Power set to',PW,'%'])
         end
 
         function LAon(~)
             system('.resources\NKTcom\NKTcom.exe -on');
-            disp('Laser Emission ON')
         end
 
         function LAoff(~)
             system('.resources\NKTcom\NKTcom.exe -off ');
-            disp('Laser Emission OFF')
         end
     end
 end
