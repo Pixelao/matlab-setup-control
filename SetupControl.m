@@ -38,9 +38,9 @@ classdef SetupControl < handle
                     end
                 case 'ITC503'
                     if ind<=length(obj.equipment.ITC503)
-                        Name=query(obj.equipment.ITC503,'V')
+                        Name=query(obj.equipment.ITC503,'V');
                     else
-                        Name=''
+                        Name='';
                     end
             end
         end
