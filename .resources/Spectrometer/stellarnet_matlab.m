@@ -1,8 +1,5 @@
 % Use the command below with correct python exe path to load the python version first time only
-% Needs x64 python exec (Kivy needs 3.7.6 or lower python version to works)
-%pyversion C:\Users\Usuario\AppData\Local\Programs\Python\Python37\python.exe
-py.importlib.import_module(stellarnet_driver.pyd);
-
+% pyversion C:\Python27\python.exe
 spectrometer = py.stellarnet_driver.array_get_spec(0);% calling spectrometer device id
 
 % setting parameters
