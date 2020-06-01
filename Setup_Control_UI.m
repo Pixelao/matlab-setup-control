@@ -84,7 +84,7 @@ function [] = Setup_Control_UI ()
     window.T.txt_Tol = uicontrol('Parent',panel_TC,'Style','text','Position',[0 35 50 25],'String','Tol(K)');
     window.T.edit_Tol = uicontrol('Parent',panel_TC,'Style','edit','String','0.01','Position',[50 40 40 25],'BackgroundColor','w','Tag','Tol');
     window.T.txt_Time = uicontrol('Parent',panel_TC,'Style','text','Position',[0 65 50 25],'String','Time(s)');
-    window.T.edit_Time = uicontrol('Parent',panel_TC,'Style','edit','String','0.1','Position',[50 70 40 25],'BackgroundColor','w','Tag','Time');
+    window.T.edit_Time = uicontrol('Parent',panel_TC,'Style','edit','String','10','Position',[50 70 40 25],'BackgroundColor','w','Tag','Time');
     window.T.t_Readout = uicontrol('Parent',panel_TC,'Style','togglebutton','Position',[5 140 70 25],'String','Read T(K)','Callback',@TC_read_callback);
     window.T.txt_Readout = uicontrol('Parent',panel_TC,'Style','edit','Position',[80 140 70 25],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','T');
     window.T.t_SettReadout = uicontrol('Parent',panel_TC,'Style','togglebutton','Position',[5 110 70 25],'String','Set T(K)','Callback',@TC_set_callback);
@@ -137,6 +137,7 @@ function [] = Setup_Control_UI ()
         end
         
         function [] = TC_go_callback(varargin)
+                window.T.edit_OK.String = 'Not OK';
                 SetT = str2double(window.T.edit_T.String);
                 Tol = str2double(window.T.edit_Tol.String);
                 Time = str2double(window.T.edit_Time.String);

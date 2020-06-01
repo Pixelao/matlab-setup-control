@@ -148,14 +148,14 @@ classdef SetupControl < handle
             St=str2double(extractAfter(x,1));% read set temperature
         end
         function stabilizationT = ITC503_SetT(obj,SetT,Tol,Time)
-                queryITC(obj.equipment.ITC503,'C3');%Remote Mode
-                queryITC(obj.equipment.ITC503,['T' num2str(SetT)]); %set temperature
-                queryITC(obj.equipment.ITC503,'A1');
-                queryITC(obj.equipment.ITC503,'L1');%Auto-PID
-                Setpoint=str2double(extractAfter(queryITC(obj.equipment.ITC503,'R0'),1));
+                queryITC(obj,'C3');%Remote Mode
+                queryITC(obj,['T' num2str(SetT)]); %set temperature
+                queryITC(obj,'A1');
+                queryITC(obj,'L1');%Auto-PID
+                Setpoint=str2double(extractAfter(queryITC(obj,'R0'),1));
                 check=0;
                 while check<Time
-                    T=str2double(extractAfter(queryITC(obj.equipment.ITC503,'R1'),1));% read temperature
+                    T=str2double(extractAfter(queryITC(obj,'R1'),1));% read temperature
                     stabilization=0;
                     if Setpoint<T+Tol && Setpoint>T-Tol
                         check=check+1;
