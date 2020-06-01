@@ -91,6 +91,10 @@ function [] = Setup_Control_UI ()
     window.T.txt_SettReadout = uicontrol('Parent',panel_TC,'Style','edit','Position',[80 110 70 25],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','SetT');
     window.T.edit_OK = uicontrol('Parent',panel_TC,'Style','edit','String','OK','Position',[110 70 40 25],'BackgroundColor','w','Tag','OK');
     
+    %% WL Panel (Spectrometer and Monochromator)
+    panel_WL = uipanel('Title','Wavelength','FontSize',10,'Units','pixels','Position',[200 350 160 80]);
+    window.UIHandles.txt_WL =uicontrol('Parent',panel_WL,'Style','PushButton','String','Read WL(nm)','Position',[5 5 70 25],'Callback',@WL_read_callback);
+    window.UIHandles.t_readout = uicontrol('Parent',panel_WL,'Style','edit','String','0','Position',[80 5 60 25],'BackgroundColor','k','ForegroundColor','w','String','   ', 'Tag','WL');
     %% SM Callbacks
         function [] = SM_read_callback(varargin)
             while window.UIHandles.t_Readout.Value
@@ -206,4 +210,8 @@ function [] = Setup_Control_UI ()
         function [] = LA_off_callback(varargin)
             window.Control.LAoff()
         end
+    %% Spectrometer Callbacks
+    function [] = WL_read_Callback
+        
+    end
     end

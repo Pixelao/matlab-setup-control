@@ -11,7 +11,6 @@ classdef SetupControl < handle
         end
         function InitComms(obj)
             instrreset;
-            try
                 obj.equipment.LI = gpib('ni',0,8); fopen(obj.equipment.LI); %Lock-in SR830
                 %obj.equipment.LI(2) = gpib('ni',0,9); fopen(obj.equipment.LI(2)); %Lock-in SR830
                 obj.equipment.SM = gpib('ni',0,26); fopen(obj.equipment.SM(1)); %Source meter
@@ -22,9 +21,7 @@ classdef SetupControl < handle
                 %obj.equipment.SM(2) = gpib('ni',0,28); fopen(obj.equipment.SM(2)); %Source meter
                 %obj.equipment.EM = gpib('ni',0,13); fopen(obj.equipment.EM(1)); %Electrometer
                 %obj.equipment.EM(2) = gpib('ni',0,14); fopen(obj.equipment.EM(2)); %Electrometer
-            catch
-                disp("ERROR")
-            end
+                %pyversion C:\Python27\python.exe %pyversion spectrometer
         end
         function Name = IDN(obj,instr,ind)
             switch instr
@@ -275,6 +272,27 @@ classdef SetupControl < handle
 
         function LAoff(~)
             system('.resources\NKTcom\NKTcom.exe -off ');
+        end
+        %Spectrometer function
+        function maxWL=SPread(~)
+        spectrometer = py.stellarnet_driver.array_get_spec(0);% calling spectrometer device id
+        % setting parameters
+        inttime =  int64(100);
+        xtiming = int64(1);
+        scansavg = int64(1);
+        smoothing = int64(4);
+        param = py.stellarnet_driver.setparam(spectrometer,inttime,xtiming,scansavg,smoothing); % calling lib to set parameter
+        wav = py.stellarnet_driver.array_get_wav(spectrometer); %getting wavelengths
+        spectrum = py.stellarnet_driver.array_spectrum(spectrometer); % getting spectrum
+        data = double(py.array.array('d',py.numpy.nditer(spectrum))); %d is for double, coverting spectrum to matlab type
+        x = double(py.array.array('d',py.numpy.nditer(wav))); %d is for double, coverting wavelengths to matlab type
+        max=0;
+        for i=1:length(data)
+            if data(i)>max
+                max=data(i);
+                maxWL=x(i);
+            end
+        end
         end
     end
 end
