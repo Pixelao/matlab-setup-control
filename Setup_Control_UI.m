@@ -95,6 +95,8 @@ function [] = Setup_Control_UI ()
     panel_WL = uipanel('Title','Wavelength','FontSize',10,'Units','pixels','Position',[200 350 160 80]);
     window.UIHandles.t_WL =uicontrol('Parent',panel_WL,'Style','togglebutton','String','Read WL(nm)','Position',[5 5 70 25],'Callback',@WL_read_callback);
     window.UIHandles.txt_readout = uicontrol('Parent',panel_WL,'Style','edit','String','0','Position',[80 5 60 25],'BackgroundColor','k','ForegroundColor','w','String','   ', 'Tag','WL');
+    window.UIHandles.t_GoToWL=uicontrol('Parent',panel_WL,'Style','PushButton','String','Set WL(nm)','Position',[5 35 70 25],'Callback',@WL_Set_callback);
+    window.UIHandles.e_WL = uicontrol('Parent',panel_WL,'Style','edit','String','0','Position',[80 35 60 25],'BackgroundColor','w','Tag','WL');
     %% SM Callbacks
         function [] = SM_read_callback(varargin)
             while window.UIHandles.t_Readout.Value
@@ -216,5 +218,9 @@ function [] = Setup_Control_UI ()
             window.UIHandles.txt_readout.String = num2str(window.Control.SPread);
             pause(1)
         end
+    end
+    function [] = WL_Set_callback(varargin)
+        WL=str2double(window.UIHandles.e_WL.String);
+        window.Control.GoToWL(WL)
     end
     end
