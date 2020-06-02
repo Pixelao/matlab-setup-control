@@ -211,7 +211,7 @@ function [] = Setup_Control_UI ()
             window.Control.LAoff()
         end
     %% Spectrometer Callbacks
-    function [] = WL_read_Callback
-        
+    function [] = WL_read_callback(varargin)
+        window.UIHandles.t_readout.String = num2str(window.Control.SPread);
     end
     end
