@@ -93,8 +93,8 @@ function [] = Setup_Control_UI ()
     
     %% WL Panel (Spectrometer and Monochromator)
     panel_WL = uipanel('Title','Wavelength','FontSize',10,'Units','pixels','Position',[200 350 160 80]);
-    window.UIHandles.txt_WL =uicontrol('Parent',panel_WL,'Style','PushButton','String','Read WL(nm)','Position',[5 5 70 25],'Callback',@WL_read_callback);
-    window.UIHandles.t_readout = uicontrol('Parent',panel_WL,'Style','edit','String','0','Position',[80 5 60 25],'BackgroundColor','k','ForegroundColor','w','String','   ', 'Tag','WL');
+    window.UIHandles.t_WL =uicontrol('Parent',panel_WL,'Style','togglebutton','String','Read WL(nm)','Position',[5 5 70 25],'Callback',@WL_read_callback);
+    window.UIHandles.txt_readout = uicontrol('Parent',panel_WL,'Style','edit','String','0','Position',[80 5 60 25],'BackgroundColor','k','ForegroundColor','w','String','   ', 'Tag','WL');
     %% SM Callbacks
         function [] = SM_read_callback(varargin)
             while window.UIHandles.t_Readout.Value
@@ -212,6 +212,9 @@ function [] = Setup_Control_UI ()
         end
     %% Spectrometer Callbacks
     function [] = WL_read_callback(varargin)
-        window.UIHandles.t_readout.String = num2str(window.Control.SPread);
+        while window.UIHandles.t_WL.Value
+            window.UIHandles.txt_readout.String = num2str(window.Control.SPread);
+            pause(1)
+        end
     end
     end
