@@ -280,17 +280,6 @@ classdef SetupControl < handle
         function LAoff(~)
             system('.resources\NKTcom\NKTcom.exe -off ');
         end
-        function p = GoToPW(obj,PW)
-            disp(['Setting',num2str(PW)])
-            output=system(['.resources\NKTcom\NKTcom.exe -p',num2str(PW)]);
-            if output=="DONE"
-                disp(['Power set to ',num2str(PW),' %'])
-                p=str2double(PW);
-            else
-                p=[];
-                error(output)
-            end
-        end
         
         %Spectrometer Functions
         function maxWL=SPread(~)
