@@ -25,34 +25,43 @@ h_T.UIHandles.b_SaveAs=uicontrol('Parent',panel_RunButtons,'Style','PushButton',
 
 % measurement ramp settings
 panel_SweepConfig=uipanel('Parent',panel_TControls,'FontSize',10 ...
-    ,'Units','pixels','Position',[10 10 100 300],'Title','Sweep config');
+    ,'Units','pixels','Position',[10 10 100 350],'Title','Sweep config');
 
-h_T.UIHandles.txt_T_Custom=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 250 100 25],'String','Custom ramp');
-h_T.UIHandles.h_T_Custom=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','[0:0.1:1 1:-0.1:0]','Position',[3 230 90 20],'BackgroundColor','w');
-h_T.UIHandles.check_T_Custom=uicontrol('Parent',panel_SweepConfig,'Style','checkbox','Position',[5 260 15 15]);
+h_T.UIHandles.txt_T_Custom=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 280 100 25],'String','Custom ramp');
+h_T.UIHandles.h_T_Custom=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','[0:0.1:1 1:-0.1:0]','Position',[3 310 90 20],'BackgroundColor','w');
+h_T.UIHandles.check_T_Custom=uicontrol('Parent',panel_SweepConfig,'Style','checkbox','Position',[5 290 15 15]);
 
-h_T.UIHandles.txt_Time=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[2 200 40 20],'String','Time(s)');
-h_T.UIHandles.h_Time=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','20','Position',[40 205 50 20],'BackgroundColor','w');
+h_T.UIHandles.txt_Time=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[2 260 40 20],'String','Time(s)');
+h_T.UIHandles.h_Time=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','20','Position',[40 265 50 20],'BackgroundColor','w');
 
-h_T.UIHandles.txt_Tol=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[2 170 40 20],'String','Tol(K)');
-h_T.UIHandles.h_Tol=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','0.1','Position',[40 175 50 20],'BackgroundColor','w');
+h_T.UIHandles.txt_Tol=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[2 230 40 20],'String','Tol(K)');
+h_T.UIHandles.h_Tol=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','0.1','Position',[40 235 50 20],'BackgroundColor','w');
 
-h_T.UIHandles.txt_Delay=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[2 10 40 20],'String','Delay');
-h_T.UIHandles.h_Delay=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','0.1','Position',[40 15 50 20],'BackgroundColor','w');
+h_T.UIHandles.txt_Step=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 205 30 20],'String','Step');
+h_T.UIHandles.h_Step=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','5','Position',[40 210 50 20],'BackgroundColor','w');
 
-h_T.UIHandles.txt_Step=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 145 30 20],'String','Step');
-h_T.UIHandles.h_Step=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','5','Position',[40 150 50 20],'BackgroundColor','w');
+h_T.UIHandles.txt_T_Max=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 180 30 20],'String','Max');
+h_T.UIHandles.h_T_Max=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','300','Position',[40 185 50 20],'BackgroundColor','w');
 
-h_T.UIHandles.txt_T_Max=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 120 30 20],'String','Max');
-h_T.UIHandles.h_T_Max=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','300','Position',[40 125 50 20],'BackgroundColor','w');
+h_T.UIHandles.txt_T_Min=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 155 30 20],'String','Min');
+h_T.UIHandles.h_T_Min=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','10','Position',[40 160 50 20],'BackgroundColor','w');
 
-h_T.UIHandles.txt_T_Min=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 95 30 20],'String','Min');
-h_T.UIHandles.h_T_Min=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','10','Position',[40 100 50 20],'BackgroundColor','w');
+h_WL.UIHandles.txt_WL_Custom=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 85 100 25],'String','Custom ramp');
+h_WL.UIHandles.h_WL_Custom=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','[0:0.1:1 1:-0.1:0]','Position',[3 115 90 20],'BackgroundColor','w');
+h_WL.UIHandles.check_WL_Custom=uicontrol('Parent',panel_SweepConfig,'Style','checkbox','Position',[5 95 15 15]);
 
+h_WL.UIHandles.txt_WL_Delay=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[2 70 40 20],'String','Delay');
+h_WL.UIHandles.h_WL_Delay=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','0.1','Position',[40 75 50 20],'BackgroundColor','w');
 
+h_WL.UIHandles.txt_WL_Step=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 45 30 20],'String','Step');
+h_WL.UIHandles.h_WL_Step=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','5','Position',[40 50 50 20],'BackgroundColor','w');
 
-h_T.UIHandles.txt_dual=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[10 0 90 20],'String','Dual Ramp');
-h_T.UIHandles.check_dual=uicontrol('Parent',panel_SweepConfig,'Style','checkbox','Position',[10 3 20 20],'Value',0);
+h_WL.UIHandles.txt_WL_Max=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 20 30 20],'String','Max');
+h_WL.UIHandles.h_WL_Max=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','1000','Position',[40 25 50 20],'BackgroundColor','w');
+
+h_WL.UIHandles.txt_WL_Min=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 0 30 20],'String','Min');
+h_WL.UIHandles.h_WL_Min=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','400','Position',[40 3 50 20],'BackgroundColor','w');
+
 % device options to plot
 devices={'SourceMeter','Electrometer','Lock-In','Plot Nothing'};
 if PCSfig.NumberOfSourceMeters>0 | PCSfig.NumberOfLockins>0 | PCSfig.NumberOfElectrometers>0

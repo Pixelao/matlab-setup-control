@@ -25,7 +25,7 @@ classdef SetupControl < handle
             try obj.equipment.SM(2) = gpib('ni',0,28); fopen(obj.equipment.SM(2)); disp("SM 2 FOUND") %Source meter
             catch; obj.equipment.SM = []; disp("SM 2 ERROR")
             end
-            try obj.equipment.EM = gpib('ni',0,13); fopen(obj.equipment.EM(1)); disp("EM 1 FOUND") %Electrometer
+            try obj.equipment.EM = gpib('ni',0,18); fopen(obj.equipment.EM(1)); disp("EM 1 FOUND") %Electrometer
             catch; obj.equipment.EM = []; disp("EM 1 ERROR")
             end
             try obj.equipment.EM(2) = gpib('ni',0,14); fopen(obj.equipment.EM(2)); disp("EM 2 FOUND") %Electrometer
