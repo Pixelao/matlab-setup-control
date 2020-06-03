@@ -3,7 +3,7 @@ function [] = Setup_Control_UI ()
     %% Create window and buttons
     addpath(genpath(pwd))
     window = figure();
-    set(window,'Name','PCS','NumberTitle','off','Position',[30 30 400 430],'MenuBar','none','Color',0.95*[1 1 1])
+    set(window,'Name','PCS','NumberTitle','off','Position',[80 80 380 440],'MenuBar','none','Color',0.95*[1 1 1])
     uicontrol('Parent',window,'Style','text','Position',[30 340 160 80],'FontSize',11,'String','V2 Nanolab May 2020');
     
     % Create setup control object and start communication
@@ -97,6 +97,7 @@ function [] = Setup_Control_UI ()
     window.UIHandles.txt_readout = uicontrol('Parent',panel_WL,'Style','edit','String','0','Position',[80 5 60 25],'BackgroundColor','k','ForegroundColor','w','String','   ', 'Tag','WL');
     window.UIHandles.t_GoToWL=uicontrol('Parent',panel_WL,'Style','PushButton','String','Set WL(nm)','Position',[5 35 70 25],'Callback',@WL_Set_callback);
     window.UIHandles.e_WL = uicontrol('Parent',panel_WL,'Style','edit','String','0','Position',[80 35 60 25],'BackgroundColor','w','Tag','WL');
+    
     %% SM Callbacks
         function [] = SM_read_callback(varargin)
             while window.UIHandles.t_Readout.Value
