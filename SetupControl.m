@@ -2,7 +2,9 @@ classdef SetupControl < handle
     properties
         equipment
     end
+    
     methods
+        %Init Functions
         function obj = SetupControl
             obj.equipment.LI=[]; %Lock-Inss
             obj.equipment.SM=[]; %Source Meters
@@ -55,6 +57,8 @@ classdef SetupControl < handle
                     end
             end
         end
+        
+        %SM Functions
         function r = SM_ReadI(obj,ind,channel)
             if ind > length(obj.equipment.SM)
                 r= 'NaN';
@@ -144,6 +148,8 @@ classdef SetupControl < handle
             message=strcat(command,num2str(I));
             fprintf(obj.equipment.SM(ind),message);
         end
+        
+        %ITC503 Functions
         function x=queryITC(obj,command)
             clrdevice(obj.equipment.ITC503)
             x=query(obj.equipment.ITC503,command);
@@ -177,6 +183,8 @@ classdef SetupControl < handle
                 end
                 stabilizationT=1;
         end
+        
+        %LI Functions
         function [xr1,yt2] = LI_Read(obj,mode)
             xr1 = [];
             yt2 = [];
@@ -216,6 +224,8 @@ classdef SetupControl < handle
             % Convert string to double 2x1 array
             
         end
+        
+        %EM Functions
         function EM_Init(obj,ind,mode)
             %fprintf(obj.equipment.EM(ind),'*RST')
             fprintf(obj.equipment.EM(ind),'VOLT:GUAR OFF')% funcion interna?
@@ -237,6 +247,8 @@ classdef SetupControl < handle
             EM_Start(obj,ind,1);
             r=query(obj.equipment.EM(ind),'READ?'); %read signal
         end
+        
+        %MS257 Functions
         function r = GoToWL (obj,WL)
             disp(['Moving to ',num2str(WL)])
             [exec_state,output]=system(['.resources\MS257com\MS257com.exe -m ',num2str(WL)]);
@@ -248,7 +260,26 @@ classdef SetupControl < handle
                 error(output)
             end
         end
-
+        
+        %LA Functions
+        function r = LAread(~)
+            [exec_state,output]=system('.resources\NKTcom\NKTcom.exe -r');
+            if exec_state==0
+                r = output;
+            else
+                r=999;
+                error(output)
+            end
+        end
+        function LAgo(~,PW)
+            system(['.resources\NKTcom\NKTcom.exe -p ',num2str(PW)]);
+        end
+        function LAon(~)
+            system('.resources\NKTcom\NKTcom.exe -on');
+        end
+        function LAoff(~)
+            system('.resources\NKTcom\NKTcom.exe -off ');
+        end
         function p = GoToPW(obj,PW)
             disp(['Setting',num2str(PW)])
             output=system(['.resources\NKTcom\NKTcom.exe -p',num2str(PW)]);
@@ -261,48 +292,27 @@ classdef SetupControl < handle
             end
         end
         
-        %LA functions
-        function r = LAread(~)
-            [exec_state,output]=system('.resources\NKTcom\NKTcom.exe -r');
-            if exec_state==0
-                r = output;
-            else
-                r=999;
-                error(output)
-            end
-        end
-
-        function LAgo(~,PW)
-            system(['.resources\NKTcom\NKTcom.exe -p ',num2str(PW)]);
-        end
-
-        function LAon(~)
-            system('.resources\NKTcom\NKTcom.exe -on');
-        end
-
-        function LAoff(~)
-            system('.resources\NKTcom\NKTcom.exe -off ');
-        end
-        %Spectrometer function
+        %Spectrometer Functions
         function maxWL=SPread(~)
-        spectrometer = py.stellarnet_driver.array_get_spec(0);% calling spectrometer device id
-        % setting parameters
-        inttime =  int64(100);
-        xtiming = int64(1);
-        scansavg = int64(1);
-        smoothing = int64(4);
-        param = py.stellarnet_driver.setparam(spectrometer,inttime,xtiming,scansavg,smoothing); % calling lib to set parameter
-        wav = py.stellarnet_driver.array_get_wav(spectrometer); %getting wavelengths
-        spectrum = py.stellarnet_driver.array_spectrum(spectrometer); % getting spectrum
-        data = double(py.array.array('d',py.numpy.nditer(spectrum))); %d is for double, coverting spectrum to matlab type
-        x = double(py.array.array('d',py.numpy.nditer(wav))); %d is for double, coverting wavelengths to matlab type
-        max=0;
-        for i=1:length(data)
-            if data(i)>max
-                max=data(i);
-                maxWL=x(i);
+            spectrometer = py.stellarnet_driver.array_get_spec(0);% calling spectrometer device id
+            % setting parameters
+            inttime =  int64(100);
+            xtiming = int64(1);
+            scansavg = int64(1);
+            smoothing = int64(4);
+            param = py.stellarnet_driver.setparam(spectrometer,inttime,xtiming,scansavg,smoothing); % calling lib to set parameter
+            wav = py.stellarnet_driver.array_get_wav(spectrometer); %getting wavelengths
+            spectrum = py.stellarnet_driver.array_spectrum(spectrometer); % getting spectrum
+            data = double(py.array.array('d',py.numpy.nditer(spectrum))); %d is for double, coverting spectrum to matlab type
+            x = double(py.array.array('d',py.numpy.nditer(wav))); %d is for double, coverting wavelengths to matlab type
+            max=0;
+            for i=1:length(data)
+                if data(i)>max
+                    max=data(i);
+                    maxWL=x(i);
+                end
             end
         end
-        end
+        
     end
 end
