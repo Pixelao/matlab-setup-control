@@ -13,7 +13,6 @@ else
     SweepMmax = str2num(Tfig.UIHandles.h_WL_Max.String);
     SweepStep = str2num(Tfig.UIHandles.h_WL_Step.String);
     SweepDelay = str2num(Tfig.UIHandles.h_WL_Delay.String);
-    SweepLimit = str2num(Tfig.UIHandles.h_WL_Limit.String);
     SweepRamp = [SweepMin:SweepStep:SweepMmax];
 end
 
@@ -28,6 +27,8 @@ else
     SweepMmaxT = str2num(Tfig.UIHandles.h_T_Max.String);
     SweepStepT = str2num(Tfig.UIHandles.h_T_Step.String);
     SweepRampT = [SweepMinT:SweepStepT:SweepMmaxT];
+    sweepTolT=str2num(Tfig.UIHandles.h_Tol.String);
+    sweepTimeT=str2num(Tfig.UIHandles.h_Time.String);
 end 
 %%
 % check if equipment is connected
@@ -71,9 +72,9 @@ for m=1:length(SweepRampT)
     end
     SetT=SweepRampT(m);
     Tol=sweepTolT;
-    Time=sweepTolT;
+    Time=sweepTimeT;
     Data.T(m)=SetT;
-    PCSfig.Control.ITC503_SetT(SetT,Tol,Time);
+    PCSfig.Control.ITC503_SetT(SetT,Tol,Time)
     for n=1:length(SweepRamp)
         if Tfig.UIHandles.b_Abort.Value == 1
             Tfig.UIHandles.b_Abort.Value = 0;

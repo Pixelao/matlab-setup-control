@@ -172,7 +172,7 @@ classdef SetupControl < handle
                 Setpoint=str2double(extractAfter(queryITC(obj,'R0'),1));
                 check=0;
                 while check<Time
-                    T=str2double(extractAfter(queryITC(obj,'R1'),1));% read temperature
+                    T=str2double(extractAfter(queryITC(obj,'R1'),1))% read temperature
                     stabilization=0;
                     if Setpoint<T+Tol && Setpoint>T-Tol
                         check=check+1;
