@@ -222,7 +222,7 @@ function [] = Setup_Control_UI ()
     end
     function [] = WL_Set_callback(varargin)
         WL=str2double(window.UIHandles.e_WL.String);
-        window.Control.GoToWL(WL)
+        window.Control.MS257move(WL)
     end
 
     end
