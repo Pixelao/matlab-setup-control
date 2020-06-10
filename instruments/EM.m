@@ -34,5 +34,6 @@ classdef EM < handle
             EM_Start(obj,ind);
             r=query(obj.equipment.EM(ind),'READ?'); %read signal
         end
+        
     end
 end
