@@ -53,9 +53,9 @@ if PCSfig.NumberOfElectrometers>0
     end
 end
     % start scan
-    % Funciones para empezar el scanning
-check=0; %initialize control variable
-n=0;%initialize iteration
+    PCSfig.MS257scan(SweepMin,SweepMmax);
+    check=0; %initialize control variable
+    n=0;%initialize iteration
 while check<Time
     n=n+1;%iteración
     if WLfig.UIHandles.b_Abort.Value == 1
