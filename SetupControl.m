@@ -17,20 +17,26 @@ classdef SetupControl < handle
             try obj.equipment.LI = gpib('ni',0,8); fopen(obj.equipment.LI); disp("LI 1 FOUND") %Lock-in SR830
             catch; obj.equipment.LI = []; disp("LI 1 ERROR")
             end
-            try obj.equipment.LI(2) = gpib('ni',0,9); fopen(obj.equipment.LI(2)); disp("LI 2 FOUND") %Lock-in SR830
-            catch; obj.equipment.LI (2) = []; disp("LI 2 ERROR")
+            if length(obj.equipment.LI)==1
+                try obj.equipment.LI(2) = gpib('ni',0,9); fopen(obj.equipment.LI(2)); disp("LI 2 FOUND") %Lock-in SR830
+                catch; obj.equipment.LI (2) = []; disp("LI 2 ERROR")
+                end
             end
             try obj.equipment.SM = gpib('ni',0,26); fopen(obj.equipment.SM(1)); disp("SM 1 FOUND") %Source meter
             catch; obj.equipment.SM = []; disp("SM 1 ERROR")
             end
-            try obj.equipment.SM(2) = gpib('ni',0,28); fopen(obj.equipment.SM(2)); disp("SM 2 FOUND") %Source meter
-            catch; obj.equipment.SM (2) = []; disp("SM 2 ERROR")
+            if length(obj.equipment.SM)==1
+                try obj.equipment.SM(2) = gpib('ni',0,28); fopen(obj.equipment.SM(2)); disp("SM 2 FOUND") %Source meter
+                catch; obj.equipment.SM (2) = []; disp("SM 2 ERROR")
+                end
             end
             try obj.equipment.EM = gpib('ni',0,18); fopen(obj.equipment.EM(1)); disp("EM 1 FOUND") %Electrometer
             catch; obj.equipment.EM = []; disp("EM 1 ERROR")
             end
-            try obj.equipment.EM(2) = gpib('ni',0,14); fopen(obj.equipment.EM(2)); disp("EM 2 FOUND") %Electrometer
-            catch; obj.equipment.EM (2) = []; disp("EM 2 ERROR")
+            if length(obj.equipment.EM)==1
+                try obj.equipment.EM(2) = gpib('ni',0,14); fopen(obj.equipment.EM(2)); disp("EM 2 FOUND") %Electrometer
+                catch; obj.equipment.EM (2) = []; disp("EM 2 ERROR")
+                end
             end
             try obj.equipment.ITC503 = gpib('ni',0,13); fopen(obj.equipment.ITC503);obj.equipment.ITC503.EOSMode='read&write';obj.equipment.ITC503.EOSCharCode='CR'; disp("ITC503 1 FOUND") %TemperatureController
             catch; obj.equipment.ITC503 = []; disp("ITC503 1 ERROR")
@@ -166,23 +172,23 @@ classdef SetupControl < handle
             St=str2double(extractAfter(x,1));% read set temperature
         end
         function stabilizationT = ITC503_SetT(obj,SetT,Tol,Time)
-                queryITC(obj,'C3');%Remote Mode
-                queryITC(obj,['T' num2str(SetT)]); %set temperature
-                queryITC(obj,'A1');
-                queryITC(obj,'L1');%Auto-PID
-                Setpoint=str2double(extractAfter(queryITC(obj,'R0'),1));
-                check=0;
-                while check<Time
-                    T=str2double(extractAfter(queryITC(obj,'R1'),1))% read temperature
-                    stabilization=0;
-                    if Setpoint<T+Tol && Setpoint>T-Tol
-                        check=check+1;
-                    else 
-                        check=0;
-                    end
-                    pause(1)
+            queryITC(obj,'C3');%Remote Mode
+            queryITC(obj,['T' num2str(SetT)]); %set temperature
+            queryITC(obj,'A1');
+            queryITC(obj,'L1');%Auto-PID
+            Setpoint=str2double(extractAfter(queryITC(obj,'R0'),1));
+            check=0;
+            while check<Time
+                T=str2double(extractAfter(queryITC(obj,'R1'),1))% read temperature
+                stabilization=0;
+                if Setpoint<T+Tol && Setpoint>T-Tol
+                    check=check+1;
+                else
+                    check=0;
                 end
-                stabilizationT=1;
+                pause(1)
+            end
+            stabilizationT=1;
         end
         
         %LI Functions
@@ -212,7 +218,7 @@ classdef SetupControl < handle
         function [FREQ] = LI_FreqRead(obj)
             FREQ=[];
             for h = obj.equipment.LI
-                value=query(h, 'FREQ?');       
+                value=query(h, 'FREQ?');
                 % Convert string to double 2x1 array
                 value = str2num(value);
                 FREQ(end+1) = value(1);
