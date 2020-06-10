@@ -256,14 +256,23 @@ classdef SetupControl < handle
         end
         
         %MS257 Functions
-        function r = GoToWL (obj,WL)
+        function r = GoToWL (~,WL)
             disp(['Moving to ',num2str(WL)])
             [exec_state,output]=system(['.resources\MS257com\MS257com.exe -m ',num2str(WL)]);
             if exec_state==0
                 disp(['Laser set to ',num2str(WL),' nm'])
-                r=str2num(output(17:end));
+                r=str2double(output(17:end));
             else
                 r=[];
+                error(output)
+            end
+        end
+
+        function MS257scan (~,startwl,endwl)
+            [exec_state,output]=system(['.resources\MS257com\MS257com.exe -s ',num2str(startwl),' ',num2str(endwl)]);
+            if exec_state==0
+                disp(['Starting MS257scan from ',num2str(startwl),' to ',num2str(endwl),'.'])
+            else
                 error(output)
             end
         end

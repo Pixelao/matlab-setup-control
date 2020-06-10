@@ -224,4 +224,5 @@ function [] = Setup_Control_UI ()
         WL=str2double(window.UIHandles.e_WL.String);
         window.Control.GoToWL(WL)
     end
+
     end
