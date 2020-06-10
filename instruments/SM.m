@@ -4,17 +4,12 @@ classdef SM < handle
     end
 
     methods
-
-        function SM_Init(obj,ind,gpibaddress) % Initialize instrument
-            obj.equipment.SM = gpib('ni',ind,gpibaddress);
-            fopen(obj.SM(ind)); % SourceMeter 
-        end
-
-        function r = SM_ReadI(obj,ind,channel) % SourceMeter Read I
-            if ind > length(SM)
+         %SM Functions
+         function r = SM_ReadI(obj,ind,channel)
+            if ind > length(obj.equipment.SM)
                 r= 'NaN';
             else
-                switch channel % select channels
+                switch channel % select channel
                     case 1
                         r=query(obj.equipment.SM(ind),'print(smua.measure.i())');
                     case 2
@@ -22,9 +17,8 @@ classdef SM < handle
                 end
             end
         end
-
-        function r = SM_ReadV(obj,ind,channel) % SourceMeter Read V
-            if ind > length(SM)
+        function r = SM_ReadV(obj,ind,channel)
+            if ind > length(obj.equipment.SM)
                 r= 'NaN';
             else
                 switch channel % select channel
@@ -35,14 +29,16 @@ classdef SM < handle
                 end
             end
         end
-
-        function [] = SM_RampV(obj,ind,channel,Vstart,Vend,stepsize,delay) % SourceMeter V Ramp
+        function [] = SM_RampV(obj,ind,channel,Vstart,Vend,stepsize,delay)
             if Vstart>Vend
                 stepsize=-abs(stepsize);
             elseif Vstart<Vend
                 stepsize=abs(stepsize);
             end
-            V=[Vstart:stepsize:Vend Vend]; %define ramp
+            Vstart
+            stepsize
+            Vend
+            V=[Vstart:stepsize:Vend Vend] %define ramp
             disp(['ramping channel ',num2str(channel),' to V = ',num2str(Vend)])
             switch channel % select channel
                 case 1
@@ -57,8 +53,7 @@ classdef SM < handle
             end
             disp('ramp done')
         end
-
-        function [] = SM_RampI(obj,ind,channel,Istart,Iend,stepsize,delay) % SourceMeter I Ramp
+        function [] = SM_RampI(obj,ind,channel,Istart,Iend,stepsize,delay)
             if Istart>Iend
                 stepsize=-abs(stepsize);
             elseif Istart<Iend
@@ -79,8 +74,7 @@ classdef SM < handle
             end
             disp('ramp done')
         end
-
-        function [] = SM_SetV(obj,ind,channel,V) % SourceMeter Set V
+        function [] = SM_SetV(obj,ind,channel,V)
             switch channel % select channel
                 case 1
                     command='smua.source.levelv = ';
@@ -90,8 +84,7 @@ classdef SM < handle
             message=strcat(command,num2str(V));
             fprintf(obj.equipment.SM(ind),message);
         end
-
-        function [] = SM_SetI(obj,ind,channel,I) % SourceMeter Set I
+        function [] = SM_SetI(obj,ind,channel,I)
             switch channel % select channel
                 case 1
                     command='smua.source.leveli = ';
