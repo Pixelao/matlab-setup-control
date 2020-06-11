@@ -4,6 +4,8 @@ addpath(genpath(pwd))
 % get figure UI handles
 PCSfig=findobj('Name','PCS');
 WLfig=findobj('Name','WL ramp');
+Time=60;
+Tol=0.1;
 % create sweep vector
 if WLfig.UIHandles.check_V_Custom.Value
     eval(strcat('SweepRamp =',WLfig.UIHandles.h_V_Custom.String,';'));
@@ -53,7 +55,7 @@ if PCSfig.NumberOfElectrometers>0
     end
 end
     % start scan
-    PCSfig.MS257scan(SweepMin,SweepMmax);
+    PCSfig.Control.MS257scan(SweepMin,SweepMmax);
     check=0; %initialize control variable
     n=0;%initialize iteration
 while check<Time
@@ -82,13 +84,14 @@ while check<Time
         myvalues=str2num(PCSfig.Control.EM_Read(ind));
         Data.EM(ind,n)=myvalues(1);
     end
-    Data.SP(n)=SPread;
+    Data.SP(n)=PCSfig.Control.SPread;
     % plot requested signals in axes
     for j=1:4
         device=char(WLfig.UIHandles.pickplot_device(j).String(WLfig.UIHandles.pickplot_device(j).Value));
         ind=WLfig.UIHandles.popup_pickplot_index(j).Value;
         channel=WLfig.UIHandles.popup_pickplot_channel(j).Value;
         mode=WLfig.UIHandles.popup_pickplot_mode(j).Value;
+        set(draw(j),'xdata',Data.SP(1,:))
         switch device
             case 'SourceMeter'
                 switch mode
@@ -108,10 +111,12 @@ while check<Time
 WLfig.MeasurementData=Data;
 pause(0.001); 
 drawnow
-    if Data.SP(n-1)-Tol<Data.SP(n)<Data.SP(n-1)+Tol
-        check=check+1;
-    else
-        check=0;
+    if n>1
+        if Data.SP(n-1)-Tol<Data.SP(n)<Data.SP(n-1)+Tol
+            check=check+1;
+        else
+            check=0;
+        end
     end
 end
 WLfig.MeasurementData=Data;
