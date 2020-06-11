@@ -48,7 +48,7 @@ Data.SM.I=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
 Data.EM=NaN(MaxSMIndex,length(SweepRamp));
 Data.LI=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
 Data.WL=NaN(1,1,length(SweepRamp));
-Data.SP=NaN(1,1,length(SweepRamp));
+Data.SP=NaN(1,length(SweepRamp));
 % initialize electrometers
 if PCSfig.NumberOfElectrometers>0
     for ind=1:PCSfig.NumberOfElectrometers
@@ -86,7 +86,7 @@ while check<Time
         myvalues=str2num(PCSfig.Control.EM_Read(ind));
         Data.EM(ind,n)=myvalues(1);
     end
-    Data.SP(n)=PCSfig.Control.SPread;
+    Data.SP(1,n)=PCSfig.Control.SPread;
     % plot requested signals in axes
     for j=1:4
         device=char(WLfig.UIHandles.pickplot_device(j).String(WLfig.UIHandles.pickplot_device(j).Value));
