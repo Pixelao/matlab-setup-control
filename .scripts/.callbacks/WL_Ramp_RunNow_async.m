@@ -6,6 +6,7 @@ PCSfig=findobj('Name','PCS');
 WLfig=findobj('Name','WL ramp');
 Time=60;
 Tol=0.1;
+%%
 % create sweep vector
 if WLfig.UIHandles.check_V_Custom.Value
     eval(strcat('SweepRamp =',WLfig.UIHandles.h_V_Custom.String,';'));
@@ -47,7 +48,7 @@ Data.SM.I=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
 Data.EM=NaN(MaxSMIndex,length(SweepRamp));
 Data.LI=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
 Data.WL=NaN(1,1,length(SweepRamp));
-Data.SP=NaN(1,length(SweepRamp));
+Data.SP=NaN(1,1,length(SweepRamp));
 % initialize electrometers
 if PCSfig.NumberOfElectrometers>0
     for ind=1:PCSfig.NumberOfElectrometers
@@ -59,6 +60,7 @@ end
     check=0; %initialize control variable
     n=0;%initialize iteration
 while check<Time
+    tic
     n=n+1;%iteración
     if WLfig.UIHandles.b_Abort.Value == 1
         WLfig.UIHandles.b_Abort.Value = 0;
@@ -91,7 +93,7 @@ while check<Time
         ind=WLfig.UIHandles.popup_pickplot_index(j).Value;
         channel=WLfig.UIHandles.popup_pickplot_channel(j).Value;
         mode=WLfig.UIHandles.popup_pickplot_mode(j).Value;
-        set(draw(j),'xdata',Data.SP(1,:))
+        set(draw(j),'xdata',Data.SP)
         switch device
             case 'SourceMeter'
                 switch mode
@@ -108,8 +110,7 @@ while check<Time
                 % do nothing
         end
     end
-WLfig.MeasurementData=Data;
-pause(0.001); 
+WLfig.MeasurementData=Data; 
 drawnow
     if n>1
         if Data.SP(n-1)-Tol<Data.SP(n)<Data.SP(n-1)+Tol
@@ -118,6 +119,7 @@ drawnow
             check=0;
         end
     end
+    toc
 end
 WLfig.MeasurementData=Data;
 disp('Done')

@@ -10,6 +10,7 @@ classdef SetupControl < handle
             obj.equipment.SM=[]; %Source Meters
             obj.equipment.EM=[]; %Electrometers
             obj.equipment.ITC503=[];%TemperatureController
+            obj.equipment.spec=[];%spectrometer
         end
         function InitComms(obj)
             instrreset;
@@ -39,7 +40,10 @@ classdef SetupControl < handle
                 end
             end
             try obj.equipment.ITC503 = gpib('ni',0,13); fopen(obj.equipment.ITC503);obj.equipment.ITC503.EOSMode='read&write';obj.equipment.ITC503.EOSCharCode='CR'; disp("ITC503 1 FOUND") %TemperatureController
-            catch; obj.equipment.ITC503 = []; disp("ITC503 1 ERROR")
+            catch; obj.equipment.ITC503 = []; disp("ITC503 ERROR")
+            end
+            try obj.equipment.spec = py.stellarnet_driver.array_get_spec(0);disp("Spectrometer FOUND")% calling spectrometer device id
+            catch; obj.equipment.spec = []; disp("Spectrometer ERROR")
             end
         end
         function Name = IDN(obj,instr,ind)
@@ -313,18 +317,17 @@ classdef SetupControl < handle
         
         %Spectrometer Functions
         function maxWL=SPread(~)
-            spectrometer = py.stellarnet_driver.array_get_spec(0);% calling spectrometer device id
             % setting parameters
             inttime =  int64(100);
             xtiming = int64(1);
             scansavg = int64(1);
-            smoothing = int64(2);
-            param = py.stellarnet_driver.setparam(spectrometer,inttime,xtiming,scansavg,smoothing); % calling lib to set parameter
-            wav = py.stellarnet_driver.array_get_wav(spectrometer); %getting wavelengths
-            spectrum = py.stellarnet_driver.array_spectrum(spectrometer); % getting spectrum
+            smoothing = int64(1);
+            param = py.stellarnet_driver.setparam(obj.equipment.spec,inttime,xtiming,scansavg,smoothing); % calling lib to set parameter
+            wav = py.stellarnet_driver.array_get_wav(obj.equipment.spec); %getting wavelengths
+            spectrum = py.stellarnet_driver.array_spectrum(obj.equipment.spec); % getting spectrum
             data = double(py.array.array('d',py.numpy.nditer(spectrum))); %d is for double, coverting spectrum to matlab type
             x = double(py.array.array('d',py.numpy.nditer(wav))); %d is for double, coverting wavelengths to matlab type
-            maxWL=x(data==max(data));
+            maxWL=mean(x(data==max(data)));
         end
         
     end
