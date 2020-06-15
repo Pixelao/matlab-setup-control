@@ -4,8 +4,8 @@ addpath(genpath(pwd))
 % get figure UI handles
 PCSfig=findobj('Name','PCS');
 WLfig=findobj('Name','WL ramp');
-Time=60;
-Tol=0.1;
+Time=30;
+Tol=0.2;
 %%
 % create sweep vector
 if WLfig.UIHandles.check_V_Custom.Value
