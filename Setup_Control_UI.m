@@ -217,7 +217,7 @@ function [] = Setup_Control_UI ()
     function [] = WL_read_callback(varargin)
         while window.UIHandles.t_WL.Value
             window.UIHandles.txt_readout.String = num2str(window.Control.SPread);
-            pause(1)
+            pause(0.1)
         end
     end
     function [] = WL_Set_callback(varargin)

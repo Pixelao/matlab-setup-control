@@ -4,8 +4,8 @@ addpath(genpath(pwd))
 % get figure UI handles
 PCSfig=findobj('Name','PCS');
 WLfig=findobj('Name','WL ramp');
-Time=30;
-Tol=0.2;
+%Time=300;
+%Tol=0.001;
 %%
 % create sweep vector
 if WLfig.UIHandles.check_V_Custom.Value
@@ -36,7 +36,7 @@ end
 for j=1:4
     ax(j)=WLfig.UIHandles.axes(j);
     draw(j)=plot(ax(j),SweepRamp,NaN(1,length(SweepRamp)));
-    set(ax(j),'xlim',[min(SweepRamp) max(SweepRamp)])    
+    set(ax(j),'xlim',[min(SweepRamp)-22 max(SweepRamp)])    
 end
 
 %% do ramp and plot
@@ -56,12 +56,13 @@ if PCSfig.NumberOfElectrometers>0
     end
 end
     % start scan
+    PCSfig.Control.MS257move(SweepMin);
     PCSfig.Control.MS257scan(SweepMin,SweepMmax);
+    pause(5)
     check=0; %initialize control variable
-    n=0;%initialize iteration
-while check<Time
-    tic
-    n=n+1;%iteración
+    n=1;%initialize iteration
+    Data.SP(1,n)=0;%Initialize condition
+while max(Data.SP)<SweepMmax-25
     if WLfig.UIHandles.b_Abort.Value == 1
         WLfig.UIHandles.b_Abort.Value = 0;
         warning('Measurement aborted by user')
@@ -86,6 +87,7 @@ while check<Time
         myvalues=str2num(PCSfig.Control.EM_Read(ind));
         Data.EM(ind,n)=myvalues(1);
     end
+    %measure wavelength
     Data.SP(1,n)=PCSfig.Control.SPread;
     % plot requested signals in axes
     for j=1:4
@@ -112,14 +114,7 @@ while check<Time
     end
 WLfig.MeasurementData=Data; 
 drawnow
-    if n>1
-        if Data.SP(n-1)-Tol<Data.SP(n)<Data.SP(n-1)+Tol
-            check=check+1;
-        else
-            check=0;
-        end
-    end
-    toc
+n=n+1;%iteración
 end
 WLfig.MeasurementData=Data;
 disp('Done')

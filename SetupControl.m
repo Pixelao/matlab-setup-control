@@ -317,7 +317,6 @@ classdef SetupControl < handle
         
         %Spectrometer Functions
         function maxWL=SPread(obj)
-            tic
             % setting parameters
             inttime =  int64(100);
             xtiming = int64(1);
@@ -328,8 +327,8 @@ classdef SetupControl < handle
             spectrum = py.stellarnet_driver.array_spectrum(obj.equipment.spec); % getting spectrum
             data = double(py.array.array('d',py.numpy.nditer(spectrum))); %d is for double, coverting spectrum to matlab type
             x = double(py.array.array('d',py.numpy.nditer(wav))); %d is for double, coverting wavelengths to matlab type
+            %figure(10);plot(x,data);
             maxWL=mean(x(data==max(data)));
-            toc
         end
         
     end
