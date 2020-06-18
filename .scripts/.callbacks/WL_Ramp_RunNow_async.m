@@ -49,6 +49,7 @@ Data.EM=NaN(MaxSMIndex,length(SweepRamp));
 Data.LI=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
 Data.WL=NaN(1,1,length(SweepRamp));
 Data.SP=NaN(1,length(SweepRamp));
+Data.time=NaN(1,length(SweepRamp));
 % initialize electrometers
 if PCSfig.NumberOfElectrometers>0
     for ind=1:PCSfig.NumberOfElectrometers
@@ -58,10 +59,10 @@ end
     % start scan
     PCSfig.Control.MS257move(SweepMin);
     PCSfig.Control.MS257scan(SweepMin,SweepMmax);
-    pause(5)
-    check=0; %initialize control variable
+    pause(3)
     n=1;%initialize iteration
     Data.SP(1,n)=0;%Initialize condition
+    tic
 while max(Data.SP)<SweepMmax-25
     if WLfig.UIHandles.b_Abort.Value == 1
         WLfig.UIHandles.b_Abort.Value = 0;
@@ -89,6 +90,8 @@ while max(Data.SP)<SweepMmax-25
     end
     %measure wavelength
     Data.SP(1,n)=PCSfig.Control.SPread;
+    %measuretime
+    Data.time(1,n)=toc;
     % plot requested signals in axes
     for j=1:4
         device=char(WLfig.UIHandles.pickplot_device(j).String(WLfig.UIHandles.pickplot_device(j).Value));
