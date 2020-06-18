@@ -34,7 +34,7 @@ end
 for j=1:4
     ax(j)=WLfig.UIHandles.axes(j);
     draw(j)=plot(ax(j),SweepRamp,NaN(1,length(SweepRamp)));
-    set(ax(j),'xlim',[min(SweepRamp)-22 max(SweepRamp)])    
+    set(ax(j),'xlim',[min(SweepRamp) max(SweepRamp)])    
 end
 
 %% do ramp and plot
