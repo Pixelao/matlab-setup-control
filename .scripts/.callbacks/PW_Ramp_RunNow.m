@@ -3,7 +3,7 @@ function [] = PW_Ramp_RunNow (varargin)
 addpath(genpath(pwd))
 % get figure UI handles
 PCSfig=findobj('Name','PCS');
-PWfig=findobj('Name','WL ramp');
+PWfig=findobj('Name','PW ramp');
 % create sweep vector
 if PWfig.UIHandles.check_V_Custom.Value
     eval(strcat('SweepRamp =',PWfig.UIHandles.h_V_Custom.String,';'));
@@ -45,7 +45,10 @@ Data.SM.I=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
 Data.EM=NaN(MaxSMIndex,length(SweepRamp));
 Data.LI=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
 Data.PW=NaN(1,1,length(SweepRamp));
-Data.SP=Nan(1,1,lenght(SweepRamp));
+Data.SP=NaN(1,1,length(SweepRamp));
+%init laser
+PCSfig.Control.LAgo(SweepRamp(1));
+PCSfig.Control.LAon;
 % initialize electrometers
 if PCSfig.NumberOfElectrometers>0
     for ind=1:PCSfig.NumberOfElectrometers
@@ -62,7 +65,8 @@ for n=1:length(SweepRamp)
         pause(0.1)
     end
     % set source to next step
-    Data.PW(n)=PCSfig.Control.LAgo(SweepRamp(n));
+    PCSfig.Control.LAgo(SweepRamp(n));
+    Data.PW(n)=SweepRamp(n);
     pause(SweepDelay)
     % measure signals from all connected source meters
     for ind=1:PCSfig.NumberOfSourceMeters
@@ -108,6 +112,7 @@ PWfig.MeasurementData=Data;
 pause(0.001); 
 drawnow
 end
+PCSfig.Control.LAoff;
 PWfig.MeasurementData=Data;
 disp('Done')
 %%

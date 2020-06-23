@@ -6,7 +6,7 @@ PCSfig=findobj('Name','PCS');
 % Create figure
 h_PW=figure();
 set(h_PW,'OuterPosition',[400 10 1000 670],'Color',0.95*[1 1 1],'ToolBar','figure'...
-    ,'NumberTitle','off','Name','WL ramp','MenuBar','figure')
+    ,'NumberTitle','off','Name','PW ramp','MenuBar','figure')
 addprop(h_PW,'UIHandles');
 addprop(h_PW,'MeasurementData');
 % IV panel
