@@ -56,6 +56,7 @@ if PCSfig.NumberOfElectrometers>0
 end
     % start scan
     PCSfig.Control.MS257move(SweepMin);
+    PCSfig.Control.LAon %turn on the laser
     PCSfig.Control.MS257scan(SweepMin,SweepMmax);
     pause(0.1)
     n=1;%initialize iteration
@@ -117,6 +118,7 @@ WLfig.MeasurementData=Data;
 drawnow
 n=n+1;%iteración
 end
+PCSfig.Control.LAoff
 WLfig.MeasurementData=Data;
 disp('Done')
 clear check
