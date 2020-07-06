@@ -1,5 +1,5 @@
 VRamp=-40:1:40;%select VoltageRamp
-DestinationPath='C:\Users\Usuario\Desktop\Medidas\Async\GateSpectra160K\V=';%select folder to save
+DestinationPath='C:\Users\Usuario\Desktop\Medidas\PWVramp\V=';%select folder to save
 % Find voltage control panel
 PCSFig=findobj('Type','Figure','Name','PCS');
 VCPanel=findobj('Parent',PCSFig,'Title','Source-Meter Control');
@@ -14,23 +14,20 @@ SMCurrent=findobj('Parent',VCPanel,'Tag','SMCurrent');
 GoToV=SMGo.Callback;
 ReadI=SMRead.Callback;
 % Find Run Now button
-WLRampFig=findobj('Type','Figure','Name','WL ramp');
-WLRunNowButton=findobj(WLRampFig,'String','Run Now');
-WLRunAsyncButton=findobj(WLRampFig,'String','Run Async');
-RunNow=WLRunNowButton.Callback;
-RunAsync=WLRunAsyncButton.Callback;
+PWRampFig=findobj('Type','Figure','Name','PW ramp');
+PWRunNowButton=findobj(PWRampFig,'String','Run Now');
+RunNow=PWRunNowButton.Callback;
 % Do measurements and save
-j=1;
 for n=1:length(VRamp)
     SMBias.String=num2str(VRamp(n)); % Set next voltage
     GoToV();
     pause(0.2)
         pause(1)
         tic
-        RunAsync(); %Measure WL ramp
+        RunNow(); %Measure PW ramp
         % Save
-        MeasurementData=WLRampFig.MeasurementData;
-        MeasurementData.time(j)=toc;
+        MeasurementData=PWRampFig.MeasurementData;
+        MeasurementData.time=toc;
         save([DestinationPath num2str(VRamp(n)) '.mat'],'MeasurementData')
 end
 SMBias.String=num2str(0); % Finish and set 0 V

@@ -69,7 +69,7 @@ dxy=[0 0 0 0;
     400 280 0 0];
 for n=1:4
     h_PW.UIHandles.axes(n) = axes('Units','pixels','Position',[200 70 300 220]+dxy(n,:),'XLim',[-1 1]);
-    box on; hold all; if n<3; xlabel('Wavelength (nm)'); end
+    box on; hold all; if n<3; xlabel('Power (%)'); end
     h_PW.UIHandles.pickplot_device(n)=uicontrol('Parent',h_PW,'Style','popupmenu','String',devices,'Position',[200 290 100 25]+dxy(n,:),'BackgroundColor','w');
     h_PW.UIHandles.popup_pickplot_index(n)=uicontrol('Parent',h_PW,'Style','popupmenu','String',indices,'Position',[310 290 50 25]+dxy(n,:),'BackgroundColor','w');
     h_PW.UIHandles.popup_pickplot_text(n)=uicontrol('Parent',h_PW,'Style','text','String','CH','Position',[370 290 30 20]+dxy(n,:),'BackgroundColor',[.95 .95 .95],'FontSize',9);
