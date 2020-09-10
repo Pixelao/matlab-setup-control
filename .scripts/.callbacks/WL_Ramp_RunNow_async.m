@@ -60,9 +60,9 @@ end
     PCSfig.Control.MS257scan(SweepMin,SweepMmax);
     pause(0.1)
     n=1;%initialize iteration
-    Data.SP(1,n)=0;%Initialize condition
+    Data.SP(1,n)=SweepMin;%Initialize condition
     tic
-while max(Data.SP)<SweepMmax-1
+while min(Data.SP)>SweepMmax+1
     if WLfig.UIHandles.b_Abort.Value == 1
         WLfig.UIHandles.b_Abort.Value = 0;
         warning('Measurement aborted by user')
