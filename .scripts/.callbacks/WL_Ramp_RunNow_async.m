@@ -11,15 +11,15 @@ if WLfig.UIHandles.check_V_Custom.Value
     SweepDelay = str2num(WLfig.UIHandles.h_V_Delay.String);
 else
     SweepMin = str2num(WLfig.UIHandles.h_V_Min.String);
-    SweepMmax = str2num(WLfig.UIHandles.h_V_Max.String);
+    SweepMax = str2num(WLfig.UIHandles.h_V_Max.String);
     SweepStep = str2num(WLfig.UIHandles.h_V_Step.String);
     SweepDelay = str2num(WLfig.UIHandles.h_V_Delay.String);
     SweepLimit = str2num(WLfig.UIHandles.h_V_Limit.String);
     
     if WLfig.UIHandles.check_dual.Value
-        SweepRamp = [0:SweepStep:SweepMmax SweepMmax:-SweepStep:SweepMin SweepMin:SweepStep:0];
+        SweepRamp = [0:SweepStep:SweepMax SweepMax:-SweepStep:SweepMin SweepMin:SweepStep:0];
     else
-        SweepRamp = [SweepMin:SweepStep:SweepMmax];
+        SweepRamp = [SweepMin:SweepStep:SweepMax];
     end
 end
 %%
@@ -54,15 +54,16 @@ if PCSfig.NumberOfElectrometers>0
         PCSfig.Control.EM_Init(ind,1) % init EMs in voltage sensing mode
     end
 end
-    % start scan
-    PCSfig.Control.MS257move(SweepMin);
-    PCSfig.Control.LAon %turn on the laser
-    PCSfig.Control.MS257scan(SweepMin,SweepMmax);
-    pause(0.1)
-    n=1;%initialize iteration
-    Data.SP(1,n)=SweepMin;%Initialize condition
-    tic
-while min(Data.SP)>SweepMmax+1
+% start scan
+PCSfig.Control.MS257move(SweepMin);
+PCSfig.Control.LAon %turn on the laser
+PCSfig.Control.MS257scan(SweepMin,SweepMax);
+pause(0.1)
+n=1;%initialize iteration
+Data.SP(1,n)=SweepMin;%Initialize condition
+EndCond=0;
+tic
+while EndCond<4 %max(Data.SP)<SweepMmax+10
     if WLfig.UIHandles.b_Abort.Value == 1
         WLfig.UIHandles.b_Abort.Value = 0;
         warning('Measurement aborted by user')
@@ -75,8 +76,8 @@ while min(Data.SP)>SweepMmax+1
     for ind=1:PCSfig.NumberOfSourceMeters
         for channel = 1:2
             if channel<=PCSfig.SourceMeterChannels(ind)
-            Data.SM.V(ind,channel,n)=str2num(PCSfig.Control.SM_ReadV(ind,channel));
-            Data.SM.I(ind,channel,n)=str2num(PCSfig.Control.SM_ReadI(ind,channel));
+                Data.SM.V(ind,channel,n)=str2num(PCSfig.Control.SM_ReadV(ind,channel));
+                Data.SM.I(ind,channel,n)=str2num(PCSfig.Control.SM_ReadI(ind,channel));
             end
         end
     end
@@ -89,7 +90,7 @@ while min(Data.SP)>SweepMmax+1
     end
     %measure wavelength
     Data.SP(1,n)=PCSfig.Control.SPread;
-    %measuretime
+    %measure time
     Data.time(1,n)=toc;
     % plot requested signals in axes
     for j=1:4
@@ -114,9 +115,15 @@ while min(Data.SP)>SweepMmax+1
                 % do nothing
         end
     end
-WLfig.MeasurementData=Data; 
-drawnow
-n=n+1;%iteración
+    WLfig.MeasurementData=Data;
+    drawnow
+    % check stop condition
+    if abs(Data.SP(1,n)-SweepMax)<10
+        EndCond=EndCond+1;
+    else
+        EndCond=0;
+    end
+    n=n+1;%iteración
 end
 PCSfig.Control.LAoff
 WLfig.MeasurementData=Data;

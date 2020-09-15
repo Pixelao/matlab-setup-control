@@ -61,7 +61,8 @@ for n=1:length(SweepRamp)
         pause(0.1)
     end
     % set source to next step
-    Data.WL(n)=PCSfig.Control.GoToWL(SweepRamp(n));
+    PCSfig.Control.MS257move(SweepRamp(n));
+    Data.WL(n)=SweepRamp(n);
     pause(SweepDelay)
     % measure signals from all connected source meters
     for ind=1:PCSfig.NumberOfSourceMeters
