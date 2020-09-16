@@ -316,7 +316,7 @@ classdef SetupControl < handle
         end
         
         %Spectrometer Functions
-        function [maxWL,counts]=SPread(obj)
+        function maxWL=SPread(obj)
             % setting parameters
             inttime =  int64(100);
             xtiming = int64(1);
@@ -327,17 +327,8 @@ classdef SetupControl < handle
             spectrum = py.stellarnet_driver.array_spectrum(obj.equipment.spec); % getting spectrum
             data = double(py.array.array('d',py.numpy.nditer(spectrum))); %d is for double, coverting spectrum to matlab type
             x = double(py.array.array('d',py.numpy.nditer(wav))); %d is for double, coverting wavelengths to matlab type
-            LF=@(I,x0,gamma,x) I./(1+((x-x0)/gamma).^2);
-            xmax=mean(x(data==max(data)));
-            datanorm=data./max(data);
-            options = optimoptions('lsqcurvefit','MaxFunEvals',10000,'MaxIter',2000,'Display','off');
-            Fit=@(p,x) LF(p(1),p(2),p(3),x)+p(4);
-            guess=[1 xmax 7 10];lb=[0 400 0 0];ub=[1 1200 20 inf];
-            p=lsqcurvefit(Fit,guess,x,datanorm,lb,ub,options);
-            maxWL=p(2);
-            p([1 4])=p([1 4]).*max(data);
-            counts=max(data);
-            %figure;hold on;plot(x,data);plot(x,Fit(p,x));hold off
+            %figure(10);plot(x,data);
+            maxWL=mean(x(data==max(data)));
         end
         
     end
