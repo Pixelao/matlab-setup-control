@@ -316,7 +316,7 @@ classdef SetupControl < handle
         end
         
         %Spectrometer Functions
-        function maxWL=SPread(obj)
+        function [maxWL,counts]=SPread(obj)
             % setting parameters
             inttime =  int64(100);
             xtiming = int64(1);
