@@ -1,5 +1,6 @@
-VRamp=-30:2:40;%select VoltageRamp
-DestinationPath='C:\Users\Usuario\Desktop\Medidas\2020_09_21\gaterampasync\V=';%select folder to save
+PWRamp=2:2:100;
+Ifixed=20e-9;
+DestinationPath='C:\Users\Usuario\Desktop\Medidas\PWramp\Vg-Vth=5V\PW=';%select folder to save
 % Find voltage control panel
 PCSFig=findobj('Type','Figure','Name','PCS');
 VCPanel=findobj('Parent',PCSFig,'Title','Source-Meter Control');
@@ -20,20 +21,28 @@ WLRunAsyncButton=findobj(WLRampFig,'String','Run Async');
 RunNow=WLRunNowButton.Callback;
 RunAsync=WLRunAsyncButton.Callback;
 % Do measurements and save
-j=1;
-for n=1:length(VRamp)
-    SMBias.String=num2str(VRamp(n)); % Set next voltage
-    GoToV();
+for n=1:length(PWRamp)
+    PCSFig.Control.LAgo(PWRamp(n)); 
     pause(0.2)
-        pause(1)
-        tic
-        RunAsync(); %Measure WL ramp
-        PCSFig.Control.LAoff
-        % Save
-        MeasurementData=WLRampFig.MeasurementData;
-        MeasurementData.time(j)=toc;
-        pause(5)
-        save([DestinationPath num2str(VRamp(n)) '.mat'],'MeasurementData')
+    pause(1)
+    %loop to avoid the photodoping
+    I=PCSFig.Control.SM_ReadI(1,1);
+    Vg=SMBias.String;
+    while I<Ifixed
+        Vg=Vg+0.1;
+        SMBias.String=num2str(Vg); % Move gate
+        GoToV();
+        I=PCSFig.Control.SM_ReadI(1,1); %read Current
+    end
+    %end loop
+    tic
+    RunAsync(); %Measure WL Ramp
+    % Save
+    MeasurementData=WLRampFig.MeasurementData;
+    MeasurementData.time=toc;
+    PCSFig.Control.LAoff
+    save([DestinationPath num2str(PWRamp(n)) '.mat'],'MeasurementData')
+    pause(5)
 end
 SMBias.String=num2str(0); % Finish and set 0 V
 GoToV();

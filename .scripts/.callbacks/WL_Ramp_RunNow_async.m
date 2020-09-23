@@ -119,7 +119,7 @@ while EndCond<4 %max(Data.SP)<SweepMmax+10
     WLfig.MeasurementData=Data;
     drawnow
     % check stop condition
-    if abs(Data.SP(1,n)-SweepMax)<5
+    if abs(Data.SP(1,n)-SweepMax)<1
         EndCond=EndCond+1;
     else
         EndCond=0;
