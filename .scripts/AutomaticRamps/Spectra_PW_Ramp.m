@@ -27,7 +27,7 @@ for n=1:length(PWRamp)
     pause(1)
     %loop to avoid the photodoping
     I=PCSFig.Control.SM_ReadI(1,1);
-    Vg=SMBias.String;
+    Vg=str2double(SMBias.String);
     while I<Ifixed
         Vg=Vg+0.1;
         SMBias.String=num2str(Vg); % Move gate
