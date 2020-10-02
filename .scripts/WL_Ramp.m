@@ -5,7 +5,7 @@ PCSfig=findobj('Name','PCS');
 %
 % Create figure
 h_WL=figure();
-set(h_WL,'OuterPosition',[400 10 1000 670],'Color',0.95*[1 1 1],'ToolBar','figure'...
+set(h_WL,'OuterPosition',[200 10 1000 700],'Color',0.95*[1 1 1],'ToolBar','figure'...
     ,'NumberTitle','off','Name','WL ramp','MenuBar','figure')
 addprop(h_WL,'UIHandles');
 addprop(h_WL,'MeasurementData');
@@ -70,9 +70,9 @@ dxy=[0 0 0 0;
     0 280 0 0;
     400 280 0 0];
 for n=1:4
-    h_WL.UIHandles.axes(n) = axes('Units','pixels','Position',[200 70 300 220]+dxy(n,:),'XLim',[-1 1]);
+    h_WL.UIHandles.axes(n) = axes('Units','pixels','Position',[200 70 300 200]+dxy(n,:),'XLim',[-1 1]);
     box on; hold all; if n<3; xlabel('Wavelength (nm)'); end
-    h_WL.UIHandles.pickplot_device(n)=uicontrol('Parent',h_WL,'Style','popupmenu','String',devices,'Position',[200 290 100 25]+dxy(n,:),'BackgroundColor','w');
+    h_WL.UIHandles.pickplot_device(n)=uicontrol('Parent',h_WL,'Style','popupmenu','String',devices,'Position',[230 290 70 25]+dxy(n,:),'BackgroundColor','w');
     h_WL.UIHandles.popup_pickplot_index(n)=uicontrol('Parent',h_WL,'Style','popupmenu','String',indices,'Position',[310 290 50 25]+dxy(n,:),'BackgroundColor','w');
     h_WL.UIHandles.popup_pickplot_text(n)=uicontrol('Parent',h_WL,'Style','text','String','CH','Position',[370 290 30 20]+dxy(n,:),'BackgroundColor',[.95 .95 .95],'FontSize',9);
     h_WL.UIHandles.popup_pickplot_channel(n)=uicontrol('Parent',h_WL,'Style','popupmenu','String',channels,'Position',[400 290 40 25]+dxy(n,:),'BackgroundColor','w');
@@ -90,4 +90,5 @@ end
             savefig(h,fullfile(pathname, filename))
         end
     end
+%%
 end

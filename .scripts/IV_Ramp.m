@@ -5,7 +5,7 @@ PCSfig=findobj('Name','PCS');
 %
 % Create figure
 h_IV=figure();
-set(h_IV,'OuterPosition',[400 10 1000 670],'Color',0.95*[1 1 1],'ToolBar','figure'...
+set(h_IV,'OuterPosition',[200 10 1000 700],'Color',0.95*[1 1 1],'ToolBar','figure'...
     ,'NumberTitle','off','Name','I-V ramp','MenuBar','figure')
 addprop(h_IV,'UIHandles');
 addprop(h_IV,'MeasurementData');
@@ -81,9 +81,9 @@ dxy=[0 0 0 0;
     0 280 0 0;
     400 280 0 0];
 for n=1:4
-    h_IV.UIHandles.axes(n) = axes('Units','pixels','Position',[200 70 300 220]+dxy(n,:),'XLim',[-1 1]);
-    box on; hold all; if n<3; xlabel('Bias Voltage/Current (V/A)'); end
-    h_IV.UIHandles.pickplot_device(n)=uicontrol('Parent',h_IV,'Style','popupmenu','String',devices,'Position',[200 290 100 25]+dxy(n,:),'BackgroundColor','w');
+    h_IV.UIHandles.axes(n) = axes('Units','pixels','Position',[200 70 300 200]+dxy(n,:),'XLim',[-1 1]);
+    box on; hold all; if n<3; xlabel('Wavelength (nm)'); end
+    h_IV.UIHandles.pickplot_device(n)=uicontrol('Parent',h_IV,'Style','popupmenu','String',devices,'Position',[230 290 70 25]+dxy(n,:),'BackgroundColor','w');
     h_IV.UIHandles.popup_pickplot_index(n)=uicontrol('Parent',h_IV,'Style','popupmenu','String',indices,'Position',[310 290 50 25]+dxy(n,:),'BackgroundColor','w');
     h_IV.UIHandles.popup_pickplot_text(n)=uicontrol('Parent',h_IV,'Style','text','String','CH','Position',[370 290 30 20]+dxy(n,:),'BackgroundColor',[.95 .95 .95],'FontSize',9);
     h_IV.UIHandles.popup_pickplot_channel(n)=uicontrol('Parent',h_IV,'Style','popupmenu','String',channels,'Position',[400 290 40 25]+dxy(n,:),'BackgroundColor','w');
