@@ -243,12 +243,11 @@ classdef SetupControl < handle
                 value=query(h, 'SENS?');
                 % Convert string to double 2x1 array
                 value = str2num(value);
-                valuesens(end+1) = value(1);
             end
-            SENS=senses(valuesens+1);
+            SENS=senses(value+1);
         end
         function []=LI_SensSet(obj,ind,SENS)
-            h = obj.equipment.LI(ind)
+            h = obj.equipment.LI(ind);
             message=strcat('SENS',num2str(SENS));
             fprintf(h, message);
         end
