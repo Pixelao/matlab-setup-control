@@ -232,10 +232,26 @@ classdef SetupControl < handle
             h = obj.equipment.LI(ind)
             message=strcat('FREQ ',num2str(FREQ));
             fprintf(h, message);
-            % Convert string to double 2x1 array
-            
+            % Convert string to double 2x1 array   
         end
-        
+        function [SENS] = LI_SensRead(obj)
+            senses=["2nV","5nV","10nV","20nV","50nV","100nV","200nV",...
+                "500nV","1muV","2muV","5muV","10muV","20muV","50muV",...
+                "100muV","200muV","500muV","1mV","2mV","5mV","10mV",...
+                "20mV","50mV","100mV","200mV","500mV","1V"];
+            for h = obj.equipment.LI
+                value=query(h, 'SENS?');
+                % Convert string to double 2x1 array
+                value = str2num(value);
+                valuesens(end+1) = value(1);
+            end
+            SENS=senses(valuesens+1);
+        end
+        function []=LI_SensSet(obj,ind,SENS)
+            h = obj.equipment.LI(ind)
+            message=strcat('SENS',num2str(SENS));
+            fprintf(h, message);
+        end
         %EM Functions
         function EM_Init(obj,ind,mode)
             %fprintf(obj.equipment.EM(ind),'*RST')
