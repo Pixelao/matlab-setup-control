@@ -1,6 +1,6 @@
-PWRamp=2:2:100;
-Ifixed=20e-9;
-DestinationPath='C:\Users\Usuario\Desktop\Medidas\PWramp\Vg-Vth=5V\PW=';%select folder to save
+PWRamp=4:2:100;
+%Ifixed=0;
+DestinationPath='C:\Users\Usuario\Desktop\Medidas\PWramp\Vg-Vth=-2V\PW=';%select folder to save
 % Find voltage control panel
 PCSFig=findobj('Type','Figure','Name','PCS');
 VCPanel=findobj('Parent',PCSFig,'Title','Source-Meter Control');
@@ -26,14 +26,14 @@ for n=1:length(PWRamp)
     pause(0.2)
     pause(1)
     %loop to avoid the photodoping
-    I=PCSFig.Control.SM_ReadI(1,1);
-    Vg=str2double(SMBias.String);
-    while I<Ifixed
-        Vg=Vg+0.1;
-        SMBias.String=num2str(Vg); % Move gate
-        GoToV();
-        I=PCSFig.Control.SM_ReadI(1,1); %read Current
-    end
+%     I=str2double(PCSFig.Control.SM_ReadI(1,1));
+%     Vg=str2double(SMBias.String);
+%     while I<Ifixed
+%         Vg=Vg+0.1;
+%         SMBias.String=num2str(Vg); % Move gate
+%         GoToV();
+%         I=str2double(PCSFig.Control.SM_ReadI(1,1)); %read Current
+%     end
     %end loop
     tic
     RunAsync(); %Measure WL Ramp

@@ -28,6 +28,8 @@ function [] = Setup_Control_UI ()
         SourceMeterModel=window.Control.IDN('SM',ind);
         if contains(SourceMeterModel,'Model 2611')
             window.SourceMeterChannels(ind)=1;
+        elseif contains(SourceMeterModel,'Model 2601')
+            window.SourceMeterChannels(ind)=1;
         elseif contains(SourceMeterModel,'Model 2614B')
             window.SourceMeterChannels(ind)=2;
         end
