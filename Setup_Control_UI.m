@@ -3,8 +3,8 @@ function [] = Setup_Control_UI ()
     %% Create window and buttons
     addpath(genpath(pwd))
     window = figure();
-    set(window,'Name','PCS','NumberTitle','off','Position',[80 80 380 440],'MenuBar','none','Color',0.95*[1 1 1])
-    uicontrol('Parent',window,'Style','text','Position',[30 340 160 80],'FontSize',11,'String','V2 Nanolab May 2020');
+    set(window,'Name','PCS','NumberTitle','off','Position',[80 80 380 470],'MenuBar','none','Color',0.95*[1 1 1])
+    uicontrol('Parent',window,'Style','text','Position',[30 380 160 80],'FontSize',11,'String','V2 Nanolab May 2020');
     
     % Create setup control object and start communication
     addprop(window,'Control');
@@ -36,7 +36,7 @@ function [] = Setup_Control_UI ()
     end
     
     %% LE Panel (Load Experiments)
-    panel_LE = uipanel('Title','Load Experiment','FontSize',10,'Units','pixels','Position',[30 310 160 80]);
+    panel_LE = uipanel('Title','Load Experiment','FontSize',10,'Units','pixels','Position',[30 350 160 80]);
     LE.p_SelectExperiment = uicontrol('Parent',panel_LE,'Style','PopupMenu','String',ls('.scripts/*.m'),'Position',[10 30 140 25]);
     LE_loadnow_callback = @(varargin) run(strcat('.scripts/',LE.p_SelectExperiment.String(LE.p_SelectExperiment.Value,:)));
     LE.b_LoadExperiment = uicontrol('Parent',panel_LE,'Style','PushButton','String','Load Now','Position',[10 5 140 25],'Callback',LE_loadnow_callback);
@@ -54,14 +54,21 @@ function [] = Setup_Control_UI ()
     window.UIHandles.t_LApercent2 = uicontrol('Parent',panel_LA,'Style','text','Position',[132 42 15 15],'FontSize',11,'String','%');
     
     %% LI Panel (Lock Ins)
-    panel_LIC=uipanel('Title','Lock-In Control','FontSize',10,'Units','pixels','Position',[30 220 160 80]);
-    window.UIHandles.txt_LIFreq=uicontrol('Parent',panel_LIC,'Style','text','Position',[7 7 55 20],'String','f(Hz)');
-    window.UIHandles.edit_LIFreq=uicontrol('Parent',panel_LIC,'Style','edit','String','0','Position',[65 10 40 20],'BackgroundColor','w','Tag','LIFreq');
-    window.UIHandles.b_GoToLIFreq=uicontrol('Parent',panel_LIC,'Style','PushButton','String','Go','Position',[110 7 40 25],'Callback',@UIHandles_GoToLIFreqCallback);
-    window.UIHandles.t_LIReadout = uicontrol('Parent',panel_LIC,'Style','togglebutton','Position',[5 35 40 25],'String','Read','Callback',@UIHandles_LIReadoutCallback);
-    window.UIHandles.txt_LIReadout = uicontrol('Parent',panel_LIC,'Style','text','Position',[50 35 55 25],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','LIReadout');
-    window.UIHandles.popup_LIReadoutVar = uicontrol('Parent',panel_LIC,'Style','popupmenu','Position',[110 35 40 25],'String',{'f','R','?','X','Y'},'Tag','LIReadout');
-    
+    panel_LIC=uipanel('Title','Lock-In Control','FontSize',10,'Units','pixels','Position',[30 220 160 130]);
+    window.UIHandles.txt_LIFreq=uicontrol('Parent',panel_LIC,'Style','text','Position',[7 4 55 20],'String','f(Hz)');
+    window.UIHandles.edit_LIFreq=uicontrol('Parent',panel_LIC,'Style','edit','String','0','Position',[65 6 40 20],'BackgroundColor','w','Tag','LIFreq');
+    window.UIHandles.b_GoToLIFreq=uicontrol('Parent',panel_LIC,'Style','PushButton','String','Go','Position',[110 5 40 22],'Callback',@UIHandles_GoToLIFreqCallback);
+    window.UIHandles.t_LIReadout = uicontrol('Parent',panel_LIC,'Style','togglebutton','Position',[5 30 40 22],'String','Read','Callback',@UIHandles_LIReadoutCallback);
+    window.UIHandles.txt_LIReadout = uicontrol('Parent',panel_LIC,'Style','text','Position',[50 32 55 20],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','LIReadout');
+    window.UIHandles.popup_LIReadoutVar = uicontrol('Parent',panel_LIC,'Style','popupmenu','Position',[110 33 40 20],'String',{'f','R','?','X','Y'},'Tag','LIReadout');
+    window.UIHandles.txt_LISens=uicontrol('Parent',panel_LIC,'Style','text','Position',[0 80 55 20],'String','Sensitivy');
+    window.UIHandles.popup_LISensitivity = uicontrol('Parent',panel_LIC,'Style','popupmenu','Position',[50 80 55 25],'String',{"2nV","5nV","10nV","20nV","50nV","100nV","200nV",...
+                "500nV","1muV","2muV","5muV","10muV","20muV","50muV",...
+                "100muV","200muV","500muV","1mV","2mV","5mV","10mV",...
+                "20mV","50mV","100mV","200mV","500mV","1V"},'Tag','LISens');
+    window.UIHandles.b_GoToLISens=uicontrol('Parent',panel_LIC,'Style','PushButton','String','Go','Position',[110 82 40 25],'Callback',@UIHandles_GoToLISensCallback);
+    window.UIHandles.t_LIReadSens = uicontrol('Parent',panel_LIC,'Style','PushButton','Position',[5 57 40 22],'String','Sens','Callback',@UIHandles_LIReadSensCallback);
+    window.UIHandles.txt_LIReadSens = uicontrol('Parent',panel_LIC,'Style','text','Position',[50 57 55 20],'BackgroundColor','k','ForegroundColor','w','String','   ','Tag','LIReadSens');
     %% SM Panel (Source Meters)
     panel_SM = uipanel('Title','Source-Meter Control','FontSize',10,'Units','pixels','Position',[30 20 160 190]);
     window.UIHandles.txt_Vbias = uicontrol('Parent',panel_SM,'Style','text','Position',[0 5 50 25],'String','Vbias');
@@ -192,6 +199,14 @@ function [] = Setup_Control_UI ()
         ind = 1;
         FREQ = str2num(window.UIHandles.edit_LIFreq.String)
         window.Control.LI_FreqSet(ind,FREQ)
+    end
+    function [] = UIHandles_GoToLISensCallback(varargin)
+        ind=1;
+        i = window.UIHandles.popup_LISensitivity.Value;
+        window.Control.LI_SensSet(ind,i-1)
+    end
+    function [] = UIHandles_LIReadSensCallback(varargin)
+        window.UIHandles.txt_LIReadSens.String=window.Control.LI_SensRead;
     end
     
     %% LASER Callbacks
