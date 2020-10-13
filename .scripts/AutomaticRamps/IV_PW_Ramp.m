@@ -21,6 +21,19 @@ IVRunNowButton=findobj(WLRampFig,'String','Run Now');
 RunNow=IVRunNowButton.Callback;
 % Do measurements and save
 for n=1:length(PWRamp)
+    %IVrampoff
+    pause(1)
+    PCS.Fig.Control.LAoff;
+    PCSFig.Control.LAgo(PWRamp(n));
+    tic
+    RunNow(); %Measure IV Ramp
+    % Save
+    MeasurementData=IVRampFig.MeasurementData;
+    MeasurementData.time=toc;
+    PCSFig.Control.LAoff
+    save([DestinationPath num2str(PWRamp(n)) 'off.mat'],'MeasurementData')
+    pause(5)
+    %IVrampon
     PCSFig.Control.LAgo(PWRamp(n));
     PCSFig.Control.MS257move(WL);
     pause(1)
@@ -31,7 +44,7 @@ for n=1:length(PWRamp)
     MeasurementData=IVRampFig.MeasurementData;
     MeasurementData.time=toc;
     PCSFig.Control.LAoff
-    save([DestinationPath num2str(PWRamp(n)) '.mat'],'MeasurementData')
+    save([DestinationPath num2str(PWRamp(n)) 'on.mat'],'MeasurementData')
     pause(5)
 end
 SMBias.String=num2str(0); % Finish and set 0 V
