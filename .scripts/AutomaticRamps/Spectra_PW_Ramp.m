@@ -1,6 +1,7 @@
 PWRamp=4:2:100;
-%Ifixed=0;
-DestinationPath='C:\Users\Usuario\Desktop\Medidas\PWramp\Vg-Vth=-2V\PW=';%select folder to save
+% Imin=1.1e-7;
+% Imax=1.11e-7;
+DestinationPath='C:\Users\Usuario\Desktop\Medidas\PWramp\Vg-Vth=-30V\PW=';%select folder to save
 % Find voltage control panel
 PCSFig=findobj('Type','Figure','Name','PCS');
 VCPanel=findobj('Parent',PCSFig,'Title','Source-Meter Control');
@@ -28,11 +29,18 @@ for n=1:length(PWRamp)
     %loop to avoid the photodoping
 %     I=str2double(PCSFig.Control.SM_ReadI(1,1));
 %     Vg=str2double(SMBias.String);
-%     while I<Ifixed
-%         Vg=Vg+0.1;
-%         SMBias.String=num2str(Vg); % Move gate
-%         GoToV();
-%         I=str2double(PCSFig.Control.SM_ReadI(1,1)); %read Current
+%     while I<Imin || I>Imax
+%         if I<Imin
+%             Vg=Vg+0.01;
+%             SMBias.String=num2str(Vg); % Move gate
+%             GoToV();
+%             I=str2double(PCSFig.Control.SM_ReadI(1,1));%read Current
+%         elseif I>Imax
+%             Vg=Vg-0.01;
+%             SMBias.String=num2str(Vg); % Move gate
+%             GoToV();
+%             I=str2double(PCSFig.Control.SM_ReadI(1,1));%read Current
+%         end
 %     end
     %end loop
     tic

@@ -82,7 +82,7 @@ dxy=[0 0 0 0;
     400 280 0 0];
 for n=1:4
     h_IV.UIHandles.axes(n) = axes('Units','pixels','Position',[200 70 300 200]+dxy(n,:),'XLim',[-1 1]);
-    box on; hold all; if n<3; xlabel('Wavelength (nm)'); end
+    box on; hold all; if n<3; xlabel('Bias (A/V)'); end
     h_IV.UIHandles.pickplot_device(n)=uicontrol('Parent',h_IV,'Style','popupmenu','String',devices,'Position',[230 290 70 25]+dxy(n,:),'BackgroundColor','w');
     h_IV.UIHandles.popup_pickplot_index(n)=uicontrol('Parent',h_IV,'Style','popupmenu','String',indices,'Position',[310 290 50 25]+dxy(n,:),'BackgroundColor','w');
     h_IV.UIHandles.popup_pickplot_text(n)=uicontrol('Parent',h_IV,'Style','text','String','CH','Position',[370 290 30 20]+dxy(n,:),'BackgroundColor',[.95 .95 .95],'FontSize',9);
