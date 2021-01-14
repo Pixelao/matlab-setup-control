@@ -3,7 +3,7 @@ function [] = TimePlot_RunNow (varargin)
 addpath(genpath(pwd))
 % get figure UI handles
 PCSfig=findobj('Name','PCS');
-Timefig=findobj('Name','TimePlot');
+Timefig=findobj('Name','Time_Plot');
 
 %%
 % check if equipment is connected
@@ -17,23 +17,28 @@ end
 for j=1:4
     ax(j)=Timefig.UIHandles.axes(j);
     draw(j)=plot(ax(j),0:300,NaN(1,301));
-    set(ax(j),'xlim',[min(SweepRamp) max(SweepRamp)])
+    set(ax(j),'xlim',[0 1])
 end
 
 %% do ramp and plot
 % initialize data variable
 MaxSMIndex=PCSfig.NumberOfSourceMeters;
 MaxChannel=max(PCSfig.SourceMeterChannels);
-Data.SM.V=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
-Data.SM.I=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
-Data.EM=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
+Data.SM.V=NaN(MaxSMIndex,MaxChannel,1000);
+Data.SM.I=NaN(MaxSMIndex,MaxChannel,1000);
+Data.EM=NaN(MaxSMIndex,1000);
+Data.LI=NaN(MaxSMIndex,MaxChannel,1000);
+Data.PW=NaN(1,1,1000);
+Data.SP=NaN(1,1,1000);
+Data.time=NaN(1,1,1000);
 % initialize electrometers
 if PCSfig.NumberOfElectrometers>0
     for ind=1:PCSfig.NumberOfElectrometers
         PCSfig.Control.EM_Init(ind,1) % init EMs in voltage sensing mode
     end
 end
-for n=1:length(SweepRamp)
+tic
+for n=1:inf
     if Timefig.UIHandles.b_Abort.Value == 1
         warning('Measurement aborted by user')
         return
@@ -41,37 +46,7 @@ for n=1:length(SweepRamp)
     while Timefig.UIHandles.b_Pause.Value == 1
         pause(0.1)
     end
-    % set source to next step
-    switch SourceMode
-        case 1 %source voltage
-            if n==1
-                if Timefig.UIHandles.b_Abort.Value == 1
-                    return
-                end
-                while Timefig.UIHandles.b_Pause.Value == 1
-                    pause(0.1)
-                end
-                Vstart=str2num(PCSfig.Control.SM_ReadV(SourceIndex,SourceChannel));
-                PCSfig.Control.SM_RampV(SourceIndex,SourceChannel,Vstart,SweepRamp(n),0.05,0.1)%ramp to first value
-            else
-                PCSfig.Control.SM_SetV(SourceIndex,SourceChannel,SweepRamp(n))
-            end
-        case 2 %source current
-            if n==1
-                if Timefig.UIHandles.b_Abort.Value == 1
-                    return
-                end
-                while Timefig.UIHandles.b_Pause.Value == 1
-                    pause(0.1)
-                end
-                Istart=str2num(PCSfig.Control.SM_ReadI(SourceIndex,SourceChannel));
-                PCSfig.Control.SM_RampI(SourceIndex,SourceChannel,Istart,SweepRamp(n),0.05,0.1)%ramp to first value
-            else
-                PCSfig.Control.SM_SetI(SourceIndex,SourceChannel,SweepRamp(n))
-            end
-    end
-    pause(SweepDelay)
-    % measure signals from all connected source meters
+% measure signals from all connected source meters
     for ind=1:PCSfig.NumberOfSourceMeters
         for channel = 1:2
             if channel<=PCSfig.SourceMeterChannels(ind)
@@ -80,17 +55,24 @@ for n=1:length(SweepRamp)
             end
         end
     end
+    % measure lock-ins
+    [Data.LI(1:PCSfig.NumberOfLockins,1,n),Data.LI(1:PCSfig.NumberOfLockins,2,n)]=PCSfig.Control.LI_Read('rt');
     % measure electrometers
     for ind=1:PCSfig.NumberOfElectrometers
         myvalues=str2num(PCSfig.Control.EM_Read(ind));
         Data.EM(ind,n)=myvalues(1);
     end
+    %measure Wavelength
+    Data.SP(n)=PCSfig.Control.SPread;
+    %measure time
+    Data.Time(n)=toc;
     % plot requested signals in axes
     for j=1:4
         device=char(Timefig.UIHandles.pickplot_device(j).String(Timefig.UIHandles.pickplot_device(j).Value));
         ind=Timefig.UIHandles.popup_pickplot_index(j).Value;
         channel=Timefig.UIHandles.popup_pickplot_channel(j).Value;
         mode=Timefig.UIHandles.popup_pickplot_mode(j).Value;
+        set(draw(j),'xdata',Data.Time(1,:))
         switch device
             case 'SourceMeter'
                 switch mode
@@ -101,12 +83,13 @@ for n=1:length(SweepRamp)
                 end
             case 'Electrometer'
                 set(draw(j),'ydata',Data.EM(1,:)-Data.EM(2,:))
+            case 'Lock-In'
+                set(draw(j),'ydata',Data.LI(ind,channel,:))
             case 'Plot Nothing'
                 % do nothing
         end
     end
-Timefig.MeasurementData=Data;
-pause(0.001); 
+Timefig.MeasurementData=Data; 
 drawnow
 end
 Timefig.MeasurementData=Data;
