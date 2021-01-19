@@ -30,7 +30,7 @@ Data.EM=NaN(MaxSMIndex,1000);
 Data.LI=NaN(MaxSMIndex,MaxChannel,1000);
 Data.PW=NaN(1,1,1000);
 Data.SP=NaN(1,1,1000);
-Data.time=NaN(1,1,1000);
+Data.time=NaN(1,1000);
 % initialize electrometers
 if PCSfig.NumberOfElectrometers>0
     for ind=1:PCSfig.NumberOfElectrometers
@@ -38,7 +38,8 @@ if PCSfig.NumberOfElectrometers>0
     end
 end
 tic
-for n=1:inf
+n=0;
+while Timefig.UIHandles.b_Abort.Value == 0
     if Timefig.UIHandles.b_Abort.Value == 1
         warning('Measurement aborted by user')
         return
@@ -46,6 +47,7 @@ for n=1:inf
     while Timefig.UIHandles.b_Pause.Value == 1
         pause(0.1)
     end
+    n=n+1;
 % measure signals from all connected source meters
     for ind=1:PCSfig.NumberOfSourceMeters
         for channel = 1:2
@@ -63,16 +65,17 @@ for n=1:inf
         Data.EM(ind,n)=myvalues(1);
     end
     %measure Wavelength
-    Data.SP(n)=PCSfig.Control.SPread;
+    %Data.SP(n)=PCSfig.Control.SPread;
     %measure time
-    Data.Time(n)=toc;
+    Data.time(n)=toc;
     % plot requested signals in axes
     for j=1:4
         device=char(Timefig.UIHandles.pickplot_device(j).String(Timefig.UIHandles.pickplot_device(j).Value));
         ind=Timefig.UIHandles.popup_pickplot_index(j).Value;
         channel=Timefig.UIHandles.popup_pickplot_channel(j).Value;
         mode=Timefig.UIHandles.popup_pickplot_mode(j).Value;
-        set(draw(j),'xdata',Data.Time(1,:))
+        set(draw(j),'xdata',Data.time(1,:))
+        set(ax(j),'xlim',[0 max(Data.time(1,:))])
         switch device
             case 'SourceMeter'
                 switch mode
