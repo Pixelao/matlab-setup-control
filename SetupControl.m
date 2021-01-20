@@ -11,6 +11,8 @@ classdef SetupControl < handle
             obj.equipment.EM=[]; %Electrometers
             obj.equipment.ITC503=[];%TemperatureController
             obj.equipment.spec=[];%spectrometer
+            obj.equipment.WPControl=[]; %WaveplateStageControl
+            obj.equipment.WPFig=[]; %WaveplateStageControlFigure
         end
         function InitComms(obj)
             instrreset;
@@ -44,6 +46,12 @@ classdef SetupControl < handle
             end
             try obj.equipment.spec = py.stellarnet_driver.array_get_spec(0);disp("Spectrometer FOUND")% calling spectrometer device id
             catch; obj.equipment.spec = []; disp("Spectrometer ERROR")
+            end
+            
+            try 
+                [obj.equipment.WPControl obj.equipment.WPFig] = obj.WaveplateInit(); disp("Spectrometer FOUND")% calling spectrometer device id
+            catch; 
+                disp("Spectrometer ERROR")
             end
         end
         function Name = IDN(obj,instr,ind)
@@ -354,5 +362,40 @@ classdef SetupControl < handle
             %figure;hold on;p([1 4])=p([1 4]).*max(data);plot(x,data);plot(x,Fit(p,x));hold off
         end
         
+        %Waveplate Functions
+        function [WPControl,WPFig] = WaveplateInit(obj)
+            % Create Matlab Figure Container
+            fpos    = get(0,'DefaultFigurePosition'); % figure default position
+            fpos(3) = 650; % figure window size;Width
+            fpos(4) = 450; % Height
+            
+            WPFig = figure('Position', fpos,...
+                'Menu','None',...
+                'Name','APT GUI',...
+                'Visible','on');
+            
+            % Create ActiveX Controller
+            WPControl = actxcontrol('MGMOTOR.MGMotorCtrl.1',[20 20 600 400 ], WPFig);
+            
+            % Initialize
+            % Start Control
+            WPControl.StartCtrl;
+            
+            % Set the Serial Number
+            SN = 27253957; % put in the serial number of the hardware
+            set(WPControl,'HWSerialNum', SN);
+            
+            % Indentify the device
+            WPControl.Identify;
+            pause(5); % waiting for the GUI to load up;
+        end
+        function [] = WaveplateMove(obj,position)
+            timeout = 10; % timeout for waiting the move to be completed
+            %h.MoveJog(0,1); % Jog
+            
+            % Set target position and move
+            obj.SetAbsMovePos(0,position);
+            obj.MoveAbsolute(0,1==1);
+        end
     end
 end

@@ -10,7 +10,7 @@ function [] = Setup_Control_UI ()
     addprop(window,'Control');
     window.Control = SetupControl;
     window.Control.InitComms;
-    
+    set(0, 'CurrentFigure', window)
     % Count connected equipments
     addprop(window,'NumberOfLockins');
     addprop(window,'NumberOfSourceMeters');
