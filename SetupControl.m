@@ -49,9 +49,9 @@ classdef SetupControl < handle
             end
             
             try 
-                [obj.equipment.WPControl obj.equipment.WPFig] = obj.WaveplateInit(); disp("Spectrometer FOUND")% calling spectrometer device id
+                [obj.equipment.WPControl obj.equipment.WPFig] = obj.WaveplateInit(); disp("Waveplate FOUND")% calling waveplate device id
             catch; 
-                disp("Spectrometer ERROR")
+                disp("Waveplate ERROR")
             end
         end
         function Name = IDN(obj,instr,ind)
