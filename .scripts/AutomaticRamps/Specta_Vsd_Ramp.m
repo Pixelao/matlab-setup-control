@@ -1,6 +1,6 @@
 %CurrentRamp=150e-9:-5e-9:5e-9;
 VRamp=0.5:0.5:10;
-DestinationPath='C:\Users\Usuario\Desktop\Medidas\Vsdramp\Vg-Vth=-5V\V=';%select folder to save
+DestinationPath='C:\Users\Usuario\Desktop\Medidas\Vsdramp\Vg-Vth=5V\V=';%select folder to save
 % Find voltage control panel
 PCSFig=findobj('Type','Figure','Name','PCS');
 VCPanel=findobj('Parent',PCSFig,'Title','Source-Meter Control');

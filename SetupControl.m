@@ -237,7 +237,7 @@ classdef SetupControl < handle
             end
         end
         function [] = LI_FreqSet(obj,ind,FREQ)
-            h = obj.equipment.LI(ind)
+            h = obj.equipment.LI(ind);
             message=strcat('FREQ ',num2str(FREQ));
             fprintf(h, message);
             % Convert string to double 2x1 array   

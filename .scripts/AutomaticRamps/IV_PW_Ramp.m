@@ -1,4 +1,4 @@
-PWRamp=0:2:100;
+PWRamp=2:2:100;
 WL=639.5;
 DestinationPath='C:\Users\Usuario\Desktop\Medidas\Gateramp\ExcitonAWL\PW=';%select folder to save
 % Find voltage control panel
@@ -16,14 +16,14 @@ SMCurrent=findobj('Parent',VCPanel,'Tag','SMCurrent');
 GoToV=SMGo.Callback;
 ReadI=SMRead.Callback;
 % Find Run Now button
-IVRampFig=findobj('Type','Figure','Name','WL ramp');
-IVRunNowButton=findobj(WLRampFig,'String','Run Now');
+IVRampFig=findobj('Type','Figure','Name','I-V ramp');
+IVRunNowButton=findobj(IVRampFig,'String','Run Now');
 RunNow=IVRunNowButton.Callback;
 % Do measurements and save
 for n=1:length(PWRamp)
     %IVrampoff
     pause(1)
-    PCS.Fig.Control.LAoff;
+    PCSFig.Control.LAoff;
     PCSFig.Control.LAgo(PWRamp(n));
     tic
     RunNow(); %Measure IV Ramp
@@ -37,7 +37,7 @@ for n=1:length(PWRamp)
     PCSFig.Control.LAgo(PWRamp(n));
     PCSFig.Control.MS257move(WL);
     pause(1)
-    PCS.Fig.Control.LAon;
+    PCSFig.Control.LAon;
     tic
     RunNow(); %Measure IV Ramp
     % Save

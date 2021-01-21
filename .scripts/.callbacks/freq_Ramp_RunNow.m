@@ -1,21 +1,32 @@
-function [] = PW_Ramp_RunNow (varargin)
+function [] = freq_Ramp_RunNow (varargin)
 %%
 addpath(genpath(pwd))
 % get figure UI handles
 PCSfig=findobj('Name','PCS');
-PWfig=findobj('Name','PW ramp');
+VCPanel=findobj('Parent',PCSfig,'Title','Source-Meter Control');
+% Find voltage controls
+Channel=[1 2];
+SMIndex=findobj('Parent',VCPanel,'Tag','SMIndex');
+SMChannel=findobj('Parent',VCPanel,'Tag','SMChannel');
+SMBias=findobj('Parent',VCPanel,'Tag','SMBias');
+SMGo=findobj('Parent',VCPanel,'String','Go');
+SMRead=findobj('Parent',VCPanel,'String','Read');
+SMCurrent=findobj('Parent',VCPanel,'Tag','SMCurrent');
+GoToV=SMGo.Callback;
+ReadI=SMRead.Callback;
+freqfig=findobj('Name','freq ramp');
 % create sweep vector
-if PWfig.UIHandles.check_V_Custom.Value
-    eval(strcat('SweepRamp =',PWfig.UIHandles.h_V_Custom.String,';'));
-    SweepDelay = str2num(PWfig.UIHandles.h_V_Delay.String);
+if freqfig.UIHandles.check_V_Custom.Value
+    eval(strcat('SweepRamp =',freqfig.UIHandles.h_V_Custom.String,';'));
+    SweepDelay = str2num(freqfig.UIHandles.h_V_Delay.String);
 else
-    SweepMin = str2num(PWfig.UIHandles.h_V_Min.String);
-    SweepMmax = str2num(PWfig.UIHandles.h_V_Max.String);
-    SweepStep = str2num(PWfig.UIHandles.h_V_Step.String);
-    SweepDelay = str2num(PWfig.UIHandles.h_V_Delay.String);
-    SweepLimit = str2num(PWfig.UIHandles.h_V_Limit.String);
+    SweepMin = str2num(freqfig.UIHandles.h_V_Min.String);
+    SweepMmax = str2num(freqfig.UIHandles.h_V_Max.String);
+    SweepStep = str2num(freqfig.UIHandles.h_V_Step.String);
+    SweepDelay = str2num(freqfig.UIHandles.h_V_Delay.String);
+    SweepLimit = str2num(freqfig.UIHandles.h_V_Limit.String);
     
-    if PWfig.UIHandles.check_dual.Value
+    if freqfig.UIHandles.check_dual.Value
         SweepRamp = [0:SweepStep:SweepMmax SweepMmax:-SweepStep:SweepMin SweepMin:SweepStep:0];
     else
         SweepRamp = [SweepMin:SweepStep:SweepMmax];
@@ -31,7 +42,7 @@ end
 %%
 % initialize plots
 for j=1:4
-    ax(j)=PWfig.UIHandles.axes(j);
+    ax(j)=freqfig.UIHandles.axes(j);
     draw(j)=plot(ax(j),SweepRamp,NaN(1,length(SweepRamp)));
     set(ax(j),'xlim',[min(SweepRamp) max(SweepRamp)])    
 end
@@ -44,12 +55,13 @@ Data.SM.V=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
 Data.SM.I=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
 Data.EM=NaN(MaxSMIndex,length(SweepRamp));
 Data.LI=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
-Data.PW=NaN(1,1,length(SweepRamp));
 Data.PWmeasure=NaN(1,1,length(SweepRamp));
 Data.SP=NaN(1,1,length(SweepRamp));
-%init laser
-PCSfig.Control.LAgo(SweepRamp(1));
-PCSfig.Control.LAon;
+Data.freq=NaN(1,1,length(SweepRamp));
+% fix current
+I=str2num(freqfig.UIHandles.h_I_fix.String);
+Imin=(I-0.02)*1e-9;
+Imax=(I+0.02)*1e-9;
 % initialize electrometers
 if PCSfig.NumberOfElectrometers>0
     for ind=1:PCSfig.NumberOfElectrometers
@@ -57,17 +69,38 @@ if PCSfig.NumberOfElectrometers>0
     end
 end
 for n=1:length(SweepRamp)
-    if PWfig.UIHandles.b_Abort.Value == 1
-        PWfig.UIHandles.b_Abort.Value = 0;
+    PCSfig.Control.LAoff;
+    if freqfig.UIHandles.b_Abort.Value == 1
+        freqfig.UIHandles.b_Abort.Value = 0;
         warning('Measurement aborted by user')
         return
     end
-    while PWfig.UIHandles.b_Pause.Value == 1
+    while freqfig.UIHandles.b_Pause.Value == 1
         pause(0.1)
     end
     % set source to next step
-    PCSfig.Control.LAgo(SweepRamp(n));
-    Data.PW(n)=SweepRamp(n);
+    PCSfig.Control.LI_FreqSet(1,SweepRamp(n));
+    Data.freq(n)=SweepRamp(n);
+    if freqfig.UIHandles.check_fixcurrent.Value==1
+        %loop to avoid the photodoping
+        I=str2double(PCSfig.Control.SM_ReadI(1,1));
+        Vg=str2double(SMBias.String);
+        while I<Imin || I>Imax
+            if I<Imin
+                Vg=Vg+0.01;
+                SMBias.String=num2str(Vg); % Move gate
+                GoToV();
+                I=str2double(PCSfig.Control.SM_ReadI(1,1));%read Current
+            elseif I>Imax
+                Vg=Vg-0.01;
+                SMBias.String=num2str(Vg); % Move gate
+                GoToV();
+                I=str2double(PCSfig.Control.SM_ReadI(1,1));%read Current
+            end
+        end
+    end
+    %end loop
+    PCSfig.Control.LAon;
     pause(SweepDelay)
     % measure signals from all connected source meters
     for ind=1:PCSfig.NumberOfSourceMeters
@@ -90,10 +123,10 @@ for n=1:length(SweepRamp)
     Data.PWmeasure(n)=str2double(PCSfig.Control.LAread);
     % plot requested signals in axes
     for j=1:4
-        device=char(PWfig.UIHandles.pickplot_device(j).String(PWfig.UIHandles.pickplot_device(j).Value));
-        ind=PWfig.UIHandles.popup_pickplot_index(j).Value;
-        channel=PWfig.UIHandles.popup_pickplot_channel(j).Value;
-        mode=PWfig.UIHandles.popup_pickplot_mode(j).Value;
+        device=char(freqfig.UIHandles.pickplot_device(j).String(freqfig.UIHandles.pickplot_device(j).Value));
+        ind=freqfig.UIHandles.popup_pickplot_index(j).Value;
+        channel=freqfig.UIHandles.popup_pickplot_channel(j).Value;
+        mode=freqfig.UIHandles.popup_pickplot_mode(j).Value;
         switch device
             case 'SourceMeter'
                 switch mode
@@ -110,12 +143,13 @@ for n=1:length(SweepRamp)
                 % do nothing
         end
     end
-PWfig.MeasurementData=Data;
+freqfig.MeasurementData=Data;
 pause(0.001); 
 drawnow
+PCSfig.Control.LAoff;
 end
 PCSfig.Control.LAoff;
-PWfig.MeasurementData=Data;
+freqfig.MeasurementData=Data;
 disp('Done')
 %%
 end

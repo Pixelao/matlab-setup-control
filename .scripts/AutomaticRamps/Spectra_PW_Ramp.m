@@ -1,7 +1,7 @@
 PWRamp=4:2:100;
-% Imin=1.1e-7;
-% Imax=1.11e-7;
-DestinationPath='C:\Users\Usuario\Desktop\Medidas\PWramp\Vg-Vth=-30V\PW=';%select folder to save
+Imin=1.1e-7;
+Imax=1.11e-7;
+DestinationPath='C:\Users\Usuario\Desktop\Medidas\PWramp\Vg-Vth=-10V(2)\PW=';%select folder to save
 % Find voltage control panel
 PCSFig=findobj('Type','Figure','Name','PCS');
 VCPanel=findobj('Parent',PCSFig,'Title','Source-Meter Control');
