@@ -49,9 +49,9 @@ classdef SetupControl < handle
             end
             
             try 
-                [obj.equipment.WPControl obj.equipment.WPFig] = obj.WaveplateInit(); disp("Waveplate FOUND")% calling waveplate device id
-            catch; 
-                disp("Waveplate ERROR")
+                [obj.equipment.WPControl,obj.equipment.WPFig] = obj.WaveplateInit(); disp("Waveplate FOUND")% calling waveplate device id
+                obj.WaveplateHome;
+            catch; disp("Waveplate ERROR")
             end
         end
         function Name = IDN(obj,instr,ind)
@@ -363,6 +363,13 @@ classdef SetupControl < handle
         end
         
         %Waveplate Functions
+        function [] = WaveplateHome(obj)
+            timeout = 10; % timeout for waiting the move to be completed
+            %h.MoveJog(0,1); % Jog
+            
+            % Set target position and move
+            obj.equipment.WPControl.MoveHome(0,1==1);
+        end
         function [WPControl,WPFig] = WaveplateInit(obj)
             % Create Matlab Figure Container
             fpos    = get(0,'DefaultFigurePosition'); % figure default position
@@ -394,8 +401,8 @@ classdef SetupControl < handle
             %h.MoveJog(0,1); % Jog
             
             % Set target position and move
-            obj.SetAbsMovePos(0,position);
-            obj.MoveAbsolute(0,1==1);
+            obj.equipment.WPControl.SetAbsMovePos(0,position);
+            obj.equipment.WPControl.MoveAbsolute(0,1==1);
         end
     end
 end
