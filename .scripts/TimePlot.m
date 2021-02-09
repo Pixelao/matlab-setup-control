@@ -64,7 +64,7 @@ h_Time.UIHandles.txt_SourceChannel=uicontrol('Parent',panel_SourceConfig,'Style'
 h_Time.UIHandles.h_SourceChannel=uicontrol('Parent',panel_SourceConfig,'Style','edit','String','1','Position',[55 15 35 25],'BackgroundColor','w');
 
 % device options to plot
-devices={'SourceMeter','Electrometer','Plot Nothing'};
+devices={'SourceMeter','Electrometer','Lock-In','Plot Nothing'};
 if PCSfig.NumberOfSourceMeters>0 | PCSfig.NumberOfLockins>0 | PCSfig.NumberOfElectrometers>0
     indices = num2str([1:max([PCSfig.NumberOfSourceMeters PCSfig.NumberOfLockins PCSfig.NumberOfElectrometers])]');
 else
