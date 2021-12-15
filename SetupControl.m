@@ -364,7 +364,7 @@ classdef SetupControl < handle
         
         %Waveplate Functions
         function [] = WaveplateHome(obj)
-            timeout = 10; % timeout for waiting the move to be completed
+            timeout = 20; % timeout for waiting the move to be completed
             %h.MoveJog(0,1); % Jog
             
             % Set target position and move

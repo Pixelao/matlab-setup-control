@@ -4,6 +4,17 @@ addpath(genpath(pwd))
 % get figure UI handles
 PCSfig=findobj('Name','PCS');
 PWfig=findobj('Name','PW ramp');
+VCPanel=findobj('Parent',PCSfig,'Title','Source-Meter Control');
+% Find voltage controls
+Channel=[1 2];
+SMIndex=findobj('Parent',VCPanel,'Tag','SMIndex');
+SMChannel=findobj('Parent',VCPanel,'Tag','SMChannel');
+SMBias=findobj('Parent',VCPanel,'Tag','SMBias');
+SMGo=findobj('Parent',VCPanel,'String','Go');
+SMRead=findobj('Parent',VCPanel,'String','Read');
+SMCurrent=findobj('Parent',VCPanel,'Tag','SMCurrent');
+GoToV=SMGo.Callback;
+ReadI=SMRead.Callback;
 % create sweep vector
 if PWfig.UIHandles.check_V_Custom.Value
     eval(strcat('SweepRamp =',PWfig.UIHandles.h_V_Custom.String,';'));
@@ -47,6 +58,10 @@ Data.LI=NaN(MaxSMIndex,MaxChannel,length(SweepRamp));
 Data.PW=NaN(1,1,length(SweepRamp));
 Data.PWmeasure=NaN(1,1,length(SweepRamp));
 Data.SP=NaN(1,1,length(SweepRamp));
+% fix current
+I=str2num(PWfig.UIHandles.h_I_fix.String);
+Imin=(I-0.1)*1e-9;
+Imax=(I+0.1)*1e-9;
 %init laser
 PCSfig.Control.LAgo(SweepRamp(1));
 PCSfig.Control.LAon;
@@ -64,6 +79,24 @@ for n=1:length(SweepRamp)
     end
     while PWfig.UIHandles.b_Pause.Value == 1
         pause(0.1)
+    end
+    if PWfig.UIHandles.check_fixcurrent.Value==1
+        %loop to avoid the photodoping
+        I=str2double(PCSfig.Control.SM_ReadI(1,1));
+        Vg=str2double(SMBias.String);
+        while I<Imin || I>Imax
+            if I<Imin
+                Vg=Vg+0.05;
+                SMBias.String=num2str(Vg); % Move gate
+                GoToV();
+                I=str2double(PCSfig.Control.SM_ReadI(1,1));%read Current
+            elseif I>Imax
+                Vg=Vg-0.05;
+                SMBias.String=num2str(Vg); % Move gate
+                GoToV();
+                I=str2double(PCSfig.Control.SM_ReadI(1,1));%read Current
+            end
+        end
     end
     % set source to next step
     PCSfig.Control.LAgo(SweepRamp(n));
@@ -113,6 +146,7 @@ for n=1:length(SweepRamp)
 PWfig.MeasurementData=Data;
 pause(0.001); 
 drawnow
+%PCSfig.Control.LAoff;
 end
 PCSfig.Control.LAoff;
 PWfig.MeasurementData=Data;

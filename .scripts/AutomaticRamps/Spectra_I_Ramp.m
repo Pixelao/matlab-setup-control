@@ -1,5 +1,6 @@
-VRamp=-60:5:-30;%select VoltageRamp
-DestinationPath='C:\Users\Usuario\Desktop\Medidas\Ana PR\ReS2\2021_05_13\vramp\V=';%select folder to save
+VRamp=-20:0.2:180;%select VoltageRamp
+Iramp=[0 0.1e-9 0.2e-9 0.5e-9 1e-9:0.5e-9:60e-9];
+DestinationPath='C:\Users\Usuario\Desktop\Medidas\MoSe2_sample\2021_04_28bis\V=';%select folder to save
 % Find voltage control panel
 PCSFig=findobj('Type','Figure','Name','PCS');
 VCPanel=findobj('Parent',PCSFig,'Title','Source-Meter Control');
@@ -21,25 +22,26 @@ RunNow=WLRunNowButton.Callback;
 RunAsync=WLRunAsyncButton.Callback;
 % Do measurements and save
 j=1;
+k=1;
 for n=1:length(VRamp)
     SMBias.String=num2str(VRamp(n)); % Set next voltage
     GoToV();
     pause(0.2)
-        pause(1)
-        I=str2double(PCSFig.Control.SM_ReadI(1,1));
-        MeasurementData.Ioff(n)=I;
-        tic
-        RunAsync(); %Measure WL ramp
-        PCSFig.Control.LAoff
-        % Save
-        MeasurementData=WLRampFig.MeasurementData;
-        MeasurementData.time(j)=toc;
-        pause(10)
-        save([DestinationPath num2str(VRamp(n)) '.mat'],'MeasurementData')
+        I=str2double(PCSFig.Control.SM_ReadI(1,1)); %read current
+        if I>Iramp(k)
+            tic
+            RunAsync(); %Measure WL ramp
+            PCSFig.Control.LAoff
+            % Save
+            MeasurementData=WLRampFig.MeasurementData;
+            MeasurementData.time(j)=toc;
+            pause(10)
+            save([DestinationPath num2str(VRamp(n)) '.mat'],'MeasurementData')
+            k=k+1;
+        else
+            %continue
+        end
 end
-SMChannel.String='1';
 SMBias.String=num2str(0); % Finish and set 0 V
-GoToV();
-SMChannel.String='2';
 GoToV();
 disp('Measurement Ended')

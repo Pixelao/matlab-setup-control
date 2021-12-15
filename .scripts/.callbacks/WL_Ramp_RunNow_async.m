@@ -64,7 +64,7 @@ Data.SP(1,n)=SweepMin;%Initialize condition
 Data.SP(2,n)=0;
 EndCond=0;
 tic
-while EndCond<4 %max(Data.SP)<SweepMmax+10
+while EndCond<2 %max(Data.SP)<SweepMmax+10
     if WLfig.UIHandles.b_Abort.Value == 1
         WLfig.UIHandles.b_Abort.Value = 0;
         warning('Measurement aborted by user')
@@ -119,7 +119,7 @@ while EndCond<4 %max(Data.SP)<SweepMmax+10
     WLfig.MeasurementData=Data;
     drawnow
     % check stop condition
-    if abs(Data.SP(1,n)-SweepMax)<3
+    if abs(Data.SP(1,n)-SweepMax)<1
         EndCond=EndCond+1;
     else
         EndCond=0;

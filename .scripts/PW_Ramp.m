@@ -25,28 +25,32 @@ h_PW.UIHandles.b_SaveAs=uicontrol('Parent',panel_RunButtons,'Style','PushButton'
 
 % measurement ramp settings
 panel_SweepConfig=uipanel('Parent',panel_IVControls,'FontSize',10 ...
-    ,'Units','pixels','Position',[10 10 100 220],'Title','Sweep config');
+    ,'Units','pixels','Position',[10 10 100 260],'Title','Sweep config');
 
-h_PW.UIHandles.txt_V_Custom=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 170 100 25],'String','Custom ramp');
-h_PW.UIHandles.h_V_Custom=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','[0:0.1:1 1:-0.1:0]','Position',[3 155 90 20],'BackgroundColor','w');
-h_PW.UIHandles.check_V_Custom=uicontrol('Parent',panel_SweepConfig,'Style','checkbox','Position',[5 180 15 15]);
+h_PW.UIHandles.txt_V_Custom=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 210 100 25],'String','Custom ramp');
+h_PW.UIHandles.h_V_Custom=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','[0:0.1:1 1:-0.1:0]','Position',[3 195 90 20],'BackgroundColor','w');
+h_PW.UIHandles.check_V_Custom=uicontrol('Parent',panel_SweepConfig,'Style','checkbox','Position',[5 220 15 15]);
 
-h_PW.UIHandles.txt_V_Limit=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[2 125 40 20],'String','Limit');
-h_PW.UIHandles.h_V_Limit=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','0.1','Position',[40 130 50 20],'BackgroundColor','w');
+h_PW.UIHandles.txt_V_Limit=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[2 165 40 20],'String','Limit');
+h_PW.UIHandles.h_V_Limit=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','0.1','Position',[40 170 50 20],'BackgroundColor','w');
 
-h_PW.UIHandles.txt_V_Delay=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[2 100 40 20],'String','Delay');
-h_PW.UIHandles.h_V_Delay=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','0.1','Position',[40 105 50 20],'BackgroundColor','w');
+h_PW.UIHandles.txt_V_Delay=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[2 140 40 20],'String','Delay');
+h_PW.UIHandles.h_V_Delay=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','0.1','Position',[40 145 50 20],'BackgroundColor','w');
 
-h_PW.UIHandles.txt_V_Step=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 75 30 20],'String','Step');
-h_PW.UIHandles.h_V_Step=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','5','Position',[40 80 50 20],'BackgroundColor','w');
+h_PW.UIHandles.txt_V_Step=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 115 30 20],'String','Step');
+h_PW.UIHandles.h_V_Step=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','1','Position',[40 120 50 20],'BackgroundColor','w');
 
-h_PW.UIHandles.txt_V_Max=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 50 30 20],'String','Max');
-h_PW.UIHandles.h_V_Max=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','1000','Position',[40 55 50 20],'BackgroundColor','w');
+h_PW.UIHandles.txt_V_Max=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 90 30 20],'String','Max');
+h_PW.UIHandles.h_V_Max=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','100','Position',[40 95 50 20],'BackgroundColor','w');
 
-h_PW.UIHandles.txt_V_Min=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 25 30 20],'String','Min');
-h_PW.UIHandles.h_V_Min=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','400','Position',[40 30 50 20],'BackgroundColor','w');
+h_PW.UIHandles.txt_V_Min=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 65 30 20],'String','Min');
+h_PW.UIHandles.h_V_Min=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','0','Position',[40 70 50 20],'BackgroundColor','w');
 
+h_PW.UIHandles.txt_I_fix=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[5 40 30 20],'String','I(nA)');
+h_PW.UIHandles.h_I_fix=uicontrol('Parent',panel_SweepConfig,'Style','edit','String','1','Position',[40 45 50 20],'BackgroundColor','w');
 
+h_PW.UIHandles.txt_fixcurrent=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[10 20 90 20],'String','fixcurrent');
+h_PW.UIHandles.check_fixcurrent=uicontrol('Parent',panel_SweepConfig,'Style','checkbox','Position',[10 23 20 20],'Value',0);
 
 h_PW.UIHandles.txt_dual=uicontrol('Parent',panel_SweepConfig,'Style','text','Position',[10 0 90 20],'String','Dual Ramp');
 h_PW.UIHandles.check_dual=uicontrol('Parent',panel_SweepConfig,'Style','checkbox','Position',[10 3 20 20],'Value',0);
